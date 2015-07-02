@@ -41,7 +41,7 @@ public final class dbConnweb {
     public dbConnweb() {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-           conne = DriverManager.getConnection("jdbc:mysql://eu-cdbr-azure-west-c.cloudapp.net:3306/olmis","ba51a5042df27c", "05b6e034");
+           conne = DriverManager.getConnection("jdbc:mysql://eu-cdbr-azure-west-c.cloudapp.net:3306/olmis","", "");
             
             //if the saved host name is less than 2 letters long, then thats not a genuine host name
 
