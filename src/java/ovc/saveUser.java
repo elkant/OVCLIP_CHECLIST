@@ -104,7 +104,14 @@ public class saveUser extends HttpServlet {
 
 
             }
-            response.sendRedirect("adduser.htm");
+            
+            
+         if(conn.rs!=null){conn.rs.close();}
+         if(conn.st1!=null){conn.st1.close();}  
+     
+            
+            
+            response.sendRedirect("newuser.htm");
 
         } catch (SQLException ex) {
             Logger.getLogger(saveUser.class.getName()).log(Level.SEVERE, null, ex);

@@ -70,13 +70,14 @@ public class loadform1 extends HttpServlet {
                     + "<div class='row'>"
                     + "<div class='col-lg-6'> <input type='hidden' value='"+no_of_elements+"' name='no_of_elements' id='no_of_elements'>"
                     + "<input type='hidden' name='totalsum' id='totalsum'>"
-                    + "<div class=\"form-group\">\n"
-                    + "<label for=\"exampleInputPassword6\">Assesment Type</label>\n"
-                    + "<select class=\"form-control\" name=\"asses_type\" id='asses_type' data-parsley-group=\"block0\" required>\n"
-                    + "" + asses
-                    + "</select>\n"
+                   
+                    + ""
+                    + "<div class='form-group'>"
+                    + "<label for='exampleInputPassword6'>Date of Assesment</label>"
+                    + "<input type='text' onchange='checkupdate();loadassesments();' class='form-control' name='ass_date' id='ass_date' >"
                     + "</div>"
                     + ""
+                   
                     + ""
                     + "<div class=\"form-group\">\n"
                     + "<label for=\"exampleInputPassword6\">Name of LIP/CBO</label>\n"
@@ -88,7 +89,7 @@ public class loadform1 extends HttpServlet {
                     + ""
                     + "<div class=\"form-group\">"
                     + "<label for=\"exampleInputPassword6\">Site Visited</label>\n"
-                    + "<select class=\"form-control\" name=\"site\" id='site' onchange='checkupdate();determinefunction(this);' data-parsley-group=\"block0\" >\n"
+                    + "<select class=\"form-control\" name=\"site\" id='site' onchange='checkupdate();determinefunction(this);loadassesments();' data-parsley-group=\"block0\" >\n"
                     + "<option value=''>Select Site</option>"
                     + "</select>"
                     + "</div>"
@@ -111,12 +112,15 @@ public class loadform1 extends HttpServlet {
                     + "" + staff
                     + "</select>"
                     + "</div>"
-                    + ""
-                    + "<div class='form-group'>"
-                    + "<label for='exampleInputPassword6'>Date of Assesment</label>"
-                    + "<input type='text' onchange='checkupdate();' class='form-control' name='ass_date' id='ass_date' >"
+                   
+                    + "<div class=\"form-group\">\n"
+                    + "<label for=\"exampleInputPassword6\">Assesment Type</label>\n"
+                    + "<select class=\"form-control\" name=\"asses_type\" id='asses_type' data-parsley-group=\"block0\" required>\n"
+                    + "" + asses
+                    + "</select>\n"
                     + "</div>"
-                    + ""
+                    + ""                  
+                   
                     + ""
                     + "<div class=\"form-group\">\n"
                     + "<label for=\"exampleInputPassword6\">Other Team members</label>\n"
@@ -180,7 +184,7 @@ public class loadform1 extends HttpServlet {
                     String elemname = "element_" + conn.rs.getString("questionid") + "#" + conn.rs.getString("response_type");
                     String marks=conn.rs.getString("marks");
                    // a query for getting total if skippable questions are to be considered
-                   String nusutotalqr=" SELECT count(*) as total FROM ovc_lip.questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
+                   String nusutotalqr=" SELECT count(*) as total FROM questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
                    int nusutotal=1;
                    conn.rs_4=conn.st_4.executeQuery(nusutotalqr);
                    
@@ -229,8 +233,9 @@ public class loadform1 extends HttpServlet {
                 middletable += "<tr><td style='color:green;'><h4 ><b>" + conn.rs.getString("sn") + "</b></h4></td><td><h4 style='color:black;'>  <b>" + conn.rs.getString("question") +"</b></h4><font color='red'>.<h4> "+ conn.rs.getString("comment")+"</h4></font></td>";
                 String elemname = "element_" + conn.rs.getString("questionid") + "#" + conn.rs.getString("response_type");
                 String marks=conn.rs.getString("marks");
-                String nusutotalqr=" SELECT count(*) as total FROM ovc_lip.questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
-                   int nusutotal=1;
+                String nusutotalqr=" SELECT count(*) as total FROM questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
+                  
+                int nusutotal=1;
                    conn.rs_4=conn.st_4.executeQuery(nusutotalqr);
                    
                    while( conn.rs_4.next()){
@@ -265,7 +270,12 @@ public class loadform1 extends HttpServlet {
                  //reset the middle table
                  
             
-            
+            if(conn.rs!=null){conn.rs.close();}   
+            if(conn.rs0!=null){conn.rs0.close();}   
+            if(conn.rs_4!=null){conn.rs_4.close();}   
+         if(conn.st0!=null){conn.st0.close();}  
+         if(conn.st!=null){conn.st.close();}  
+         if(conn.st_4!=null){conn.st_4.close();}  
             
 
             try (PrintWriter out = response.getWriter()) {

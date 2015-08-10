@@ -38,6 +38,8 @@ public class loadStaff extends HttpServlet {
             
             }
             
+            if(conn.rs!=null){conn.rs.close();}   
+         if(conn.st!=null){conn.st.close();}  
             
             try (PrintWriter out = response.getWriter()) {
                 out.println(createdtable);

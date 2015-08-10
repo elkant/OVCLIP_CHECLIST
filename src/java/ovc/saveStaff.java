@@ -88,6 +88,22 @@ public class saveStaff extends HttpServlet {
             result="<font color='green'>Member "+fname+" "+lname+" added succesfully </font>";
             
             }
+            
+              if (conn.rs2 != null) {
+                            conn.rs2.close();
+                        }
+                        if (conn.pst1 != null) {
+                            conn.pst1.close();
+                        }
+                        if (conn.pst2 != null) {
+                            conn.pst2.close();
+                        }
+
+                        if (conn.conne != null) {
+                            conn.conne.close();
+                        }
+            
+            
                  }         
             try (PrintWriter out = response.getWriter()) {
                 

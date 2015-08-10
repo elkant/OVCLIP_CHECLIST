@@ -92,6 +92,9 @@ public class loaddqaform extends HttpServlet {
                                   }  
             createdtable+="</table><input type='hidden' name='counter' id='counter' value='"+counter+"'></div>";
             
+            if(conn.rs0!=null){conn.rs0.close();}   
+         if(conn.st0!=null){conn.st0.close();}  
+            
             out.println(createdtable);
             
             

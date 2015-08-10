@@ -68,7 +68,7 @@ public class countyreport extends HttpServlet {
             enddate=request.getParameter("enddate");
             
             
-            String getdistinctsites="SELECT county.county_id as countyid,county_name FROM ovc_lip.backgroundinfor join (sites join (district join county on district.county_id=county.county_id) on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where ass_date between '"+startdate+"' and '"+enddate+"' group by county_name ";
+            String getdistinctsites="SELECT county.county_id as countyid,county_name FROM backgroundinfor join (sites join (district join county on district.county_id=county.county_id) on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where ass_date between '"+startdate+"' and '"+enddate+"' group by county_name ";
             
             ArrayList countyids=new ArrayList();
             ArrayList countynames=new ArrayList();
@@ -528,11 +528,11 @@ public class countyreport extends HttpServlet {
             shet2.addMergedRegion(new CellRangeAddress(7,7,0,5));
             
            // String gettables = "SELECT domain_name,domains.domain_id as domainid,section_name,domains.section_id as secid,value as domainvalue,aggregate_sum,period,year,site FROM domains join sections on domains.section_id=sections.section_id join domain_totals on domains.domain_id=domain_totals.domainid where "+mywhere+" order by domainid";
-            String gettables= "SELECT domain_name,avg(value) as domainvalue,section_name ,domains.section_id as secid FROM ovc_lip.domain_totals join (sites join (district join county on district.county_id=county.county_id) on sites.districtid=district.district_id) on domain_totals.site=sites.site_id join (domains join sections on domains.section_id=sections.section_id) on domain_totals.domainid=domains.domain_id  where county.county_id='"+countyids.get(u)+"' and date between '"+startdate+"' and '"+enddate+"' group by domain_totals.domainid,county_name order by domainid";
+            String gettables= "SELECT domain_name,avg(value) as domainvalue,section_name ,domains.section_id as secid FROM domain_totals join (sites join (district join county on district.county_id=county.county_id) on sites.districtid=district.district_id) on domain_totals.site=sites.site_id join (domains join sections on domains.section_id=sections.section_id) on domain_totals.domainid=domains.domain_id  where county.county_id='"+countyids.get(u)+"' and date between '"+startdate+"' and '"+enddate+"' group by domain_totals.domainid,county_name order by domainid";
        //if its the first county, themn skip the county part
             if(countyids.get(u).toString().equalsIgnoreCase("1000")){
              
-                gettables= "SELECT domain_name,avg(value) as domainvalue,section_name ,domains.section_id as secid FROM ovc_lip.domain_totals  join (domains join sections on domains.section_id=sections.section_id) on domain_totals.domainid=domains.domain_id  where  date between '"+startdate+"' and '"+enddate+"' group by domain_totals.domainid order by domainid";
+                gettables= "SELECT domain_name,avg(value) as domainvalue,section_name ,domains.section_id as secid FROM domain_totals  join (domains join sections on domains.section_id=sections.section_id) on domain_totals.domainid=domains.domain_id  where  date between '"+startdate+"' and '"+enddate+"' group by domain_totals.domainid order by domainid";
        
             }
             System.out.println(gettables);
@@ -734,6 +734,14 @@ public class countyreport extends HttpServlet {
              
         }           
              
+    
+            if (conn.rs != null) {
+                conn.rs.close();
+            }
+            if (conn.st != null) {
+                conn.st.close();
+            }
+    
              
             
             //write it as an excel attachment

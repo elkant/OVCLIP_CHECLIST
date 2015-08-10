@@ -29,6 +29,63 @@ public class syncdata extends HttpServlet {
         
         
         
+         response.setContentType("text/html;charset=UTF-8");
+            try (PrintWriter out = response.getWriter()) {
+                
+                out.println("</html>");
+            }
+        
+        
+        
+        
+        
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+
+
+public boolean doSyncing(){
+
+
+System.out.println("Now syncing_________________________");
         
         try {
             
@@ -46,9 +103,10 @@ public class syncdata extends HttpServlet {
             
             while(loccon.rs.next()){
             //now check existance in the cloud using the unique id
-                
+                    
         String checkbainfor="select ass_date,timestamp from backgroundinfor where backgroundid = '"+loccon.rs.getString(1)+"'";        
-          webcon.rs=webcon.st.executeQuery(checkbainfor);
+         
+        webcon.rs=webcon.st.executeQuery(checkbainfor);
         if(webcon.rs.next()){
         //if exists, then check timestamp
             //if equal, update
@@ -88,11 +146,11 @@ public class syncdata extends HttpServlet {
           webcon.pst2.setString(14,loccon.rs.getString("constraints")); 
           webcon.pst2.executeUpdate(); 
           
-          loccon.st2.executeUpdate("update backgroundinfor set issync='1' where backgroundid='"+loccon.rs.getString(1)+"' ");
-        }
+      }
             
             
-            
+           loccon.st2.executeUpdate("update backgroundinfor set issync='1' where backgroundid='"+loccon.rs.getString(1)+"' ");
+             
             
             }//end of bcakground infor
             
@@ -115,7 +173,7 @@ public class syncdata extends HttpServlet {
              if(loccon.rs.getTimestamp("timestamp").equals(webcon.rs.getTimestamp("timestamp"))){
         
         
-        String update="update marks set quest_id='"+loccon.rs.getString("quest_id")+"', answer='"+loccon.rs.getString("answer")+"' , period='"+loccon.rs.getString("period")+"' ,timestamp='"+loccon.rs.getString("timestamp")+"', date='"+loccon.rs.getString("date")+"', year='"+loccon.rs.getString("year")+"',month='"+loccon.rs.getString("month")+"', site_id='"+loccon.rs.getString("site_id")+"', marks_table_id='"+loccon.rs.getString("marks_table_id")+"' , comment='"+loccon.rs.getString("comment")+"', issynced='1' where backgroundid='"+loccon.rs.getString(1)+"' ";
+        String update="update marks set quest_id='"+loccon.rs.getString("quest_id")+"', answer='"+loccon.rs.getString("answer")+"' , period='"+loccon.rs.getString("period")+"' ,timestamp='"+loccon.rs.getString("timestamp")+"', date='"+loccon.rs.getString("date")+"', year='"+loccon.rs.getString("year")+"',month='"+loccon.rs.getString("month")+"', site_id='"+loccon.rs.getString("site_id")+"', marks_table_id='"+loccon.rs.getString("marks_table_id")+"' , comment='"+loccon.rs.getString("comment")+"', issynced='1' where marks_id='"+loccon.rs.getString(1)+"' ";
         
         webcon.st1.executeUpdate(update);
         
@@ -148,8 +206,8 @@ public class syncdata extends HttpServlet {
             // if update done, update issynced to 
              
              
-             loccon.st2.executeUpdate("update marks set issynced='1' where marks_id='"+loccon.rs.getString(1)+"' ");
-             }
+            }
+              loccon.st2.executeUpdate("update marks set issynced='1' where marks_id='"+loccon.rs.getString(1)+"' ");
             
             
             }
@@ -206,9 +264,9 @@ public class syncdata extends HttpServlet {
             // if update done, update issynced to 
              
              
-             loccon.st2.executeUpdate("update domain_totals set issynced='1' where tableid='"+loccon.rs.getString(1)+"' ");
-             }
-            
+           }
+              loccon.st2.executeUpdate("update domain_totals set issynced='1' where tableid='"+loccon.rs.getString(1)+"' ");
+             
             
             }//end of domain_totals
             
@@ -260,10 +318,10 @@ public class syncdata extends HttpServlet {
             // if update done, update issynced to 
              
              
+           }
+            
              loccon.st2.executeUpdate("update staff set issynced='1' where staff_id='"+loccon.rs.getString(1)+"' ");
-             }
-            
-            
+             
             }//end of staff
             
           
@@ -274,8 +332,9 @@ public class syncdata extends HttpServlet {
             
             while(loccon.rs.next()){
             //check existance
-                
+               
                 String checkexist="select userid, timestamp from users where userid='"+loccon.rs.getString(1)+"' ";
+                   System.out.println(checkexist); 
             //if exists, compare time
              webcon.rs=webcon.st.executeQuery(checkexist);
              if(webcon.rs.next()){
@@ -314,10 +373,10 @@ public class syncdata extends HttpServlet {
             // if update done, update issynced to 
              
              
+           }
+            
              loccon.st2.executeUpdate("update users set issynced='1' where userid='"+loccon.rs.getString(1)+"' ");
-             }
-            
-            
+              
             }//end of users
             
             
@@ -338,59 +397,13 @@ public class syncdata extends HttpServlet {
            
             
             
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter()) {
-                
-                out.println("</html>");
-            }
+           
         }   catch (SQLException ex) {
             Logger.getLogger(syncdata.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
-        
-        
-    }
+    
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+return true;
+}
 
 }

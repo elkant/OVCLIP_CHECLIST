@@ -253,6 +253,14 @@ public class login extends HttpServlet {
 
         }
 
+            if(conn.rs!=null){conn.rs.close();}   
+            if(conn.rs1!=null){conn.rs1.close();}   
+        
+         if(conn.st1!=null){conn.st1.close();}  
+         if(conn.st!=null){conn.st.close();}  
+         if(conn.st3!=null){conn.st3.close();} 
+      
+        
 
         session.setAttribute("error_login", error_login);
         response.sendRedirect(nextPage);

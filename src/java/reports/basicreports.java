@@ -624,7 +624,13 @@ public class basicreports extends HttpServlet {
              
              
              
-             
+             if (conn.rs != null) {
+                conn.rs.close();
+            }
+            if (conn.st != null) {
+                conn.st.close();
+            }
+
              
              
              

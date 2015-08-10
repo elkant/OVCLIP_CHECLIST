@@ -278,6 +278,24 @@ else{quarters="0";}
         }
             System.out.println(msg);
         
+            if (conn.rs != null) {
+                conn.rs.close();
+            }
+            if (conn.st != null) {
+                conn.st.close();
+            }
+
+            if (conn.pst1 != null) {
+                conn.pst1.close();
+            }
+            if (conn.pst2 != null) {
+                conn.pst2.close();
+            }
+
+            if (conn.conne != null) {
+                conn.conne.close();
+            }
+            
             out.println(msg);
         } catch (SQLException ex) {
            Logger.getLogger(savedata.class.getName()).log(Level.SEVERE, null, ex);

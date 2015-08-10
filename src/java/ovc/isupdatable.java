@@ -51,7 +51,8 @@ public class isupdatable extends HttpServlet {
         out.println("new");
          System.out.println("new");
      }
-            
+         if(conn.rs!=null){conn.rs.close();}   
+         if(conn.st!=null){conn.st.close();}   
             
         } catch (SQLException ex) {
             Logger.getLogger(isupdatable.class.getName()).log(Level.SEVERE, null, ex);

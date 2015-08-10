@@ -656,6 +656,14 @@ public class multiplesitesreport extends HttpServlet {
         }           
              
              
+    
+            if (conn.rs != null) {
+                conn.rs.close();
+            }
+            if (conn.st != null) {
+                conn.st.close();
+            }
+    
             
             //write it as an excel attachment
            

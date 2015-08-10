@@ -18,66 +18,58 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author MANUEL
+ * @author Emmanuel E
  */
-public class saveDesignation extends HttpServlet {
+public class assesmentType extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            response.setContentType("text/html;charset=UTF-8");
-            
-            
-            String dis=request.getParameter("dis");
-            String msg="<font color='green'> "+dis+" Added succesfully !. refresh the page to see the added designation</font>";
-            
-            dbConn conn=new dbConn();
-            
-            String insertdes="Insert into designation (designation) value ('"+dis+"') ";
-            //check first whether the designation exists
-            
-            
-            String check="select designation from designation where designation like '"+dis+"'";
-            
-            
-            conn.rs=conn.st.executeQuery(check);
-            
-            if (!conn.rs.next()){
-               
-                
-                //excecute the insert statement
-                
-                
-                conn.st0.executeUpdate(insertdes);
-                
-            }
-            else {
-            msg="<font color='red'> "+dis+" Already exists </font>";
-                 }
-            
-               if(conn.rs!=null){conn.rs.close();}   
-           
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+        String siteid="";
+      
+        String asses="<option value=''>Select Assesment</option>";
+        String year="";
+        String quarter="";
+         dbConn conn = new dbConn();
         
-         if(conn.st0!=null){conn.st0.close();}  
-         if(conn.st!=null){conn.st.close();}  
-        
-            
-            try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
-                
-                out.println(msg);
+      year=request.getParameter("year");
+      quarter=request.getParameter("quarter");
+      siteid=request.getParameter("siteid");
+         
+         //check if the site has had an initial assesment
+//ask joel if a site can have initial assements more than once that we should av
+       //  and year='"+year+"' and period='"+quarter+"'
+         
+         String checkinitassesment="select * from backgroundinfor where ass_type='1' and site='"+siteid+"' ";
+         
+         conn.rs=conn.st.executeQuery(checkinitassesment);
+         
+         if(conn.rs.next()){
+            String getass = "select * from asses_type where asses_id!='1'";
+            conn.rs0 = conn.st0.executeQuery(getass);
+            while (conn.rs0.next()) {
+                asses += "<option value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + "</option>";
+
             }
-        }   catch (SQLException ex) {
-            Logger.getLogger(saveDesignation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         else {
+         
+          asses += "<option value='1'>Initial Assesment</option>";
+
+         }
+            
+            
+            out.println(asses);
+            
+            if(conn.rs0!=null){conn.rs0.close();}
+            if(conn.st0!=null){conn.st0.close();}
+            if(conn.st!=null){conn.st.close();}
+            if(conn.rs!=null){conn.rs.close();}
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(assesmentType.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -124,6 +124,25 @@ public class saveactionpoint extends HttpServlet {
             
             }//end of checker of if data has already been inserted
            
+            
+            if (conn.rs != null) {
+                conn.rs.close();
+            }
+            if (conn.rs2 != null) {
+                conn.rs2.close();
+            }
+
+            if (conn.pst2 != null) {
+                conn.pst2.close();
+            }
+            if (conn.conne != null) {
+                conn.conne.close();
+            }
+            if (conn.st2 != null) {
+                conn.st2.close();
+            }
+         
+            
            session.setAttribute("actionmsg",msg); 
             System.out.println(msg);
            //response.sendRedirect("dataentry.htm");

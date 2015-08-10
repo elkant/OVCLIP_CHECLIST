@@ -112,7 +112,21 @@ public class saveSite extends HttpServlet {
                      
                      }
                         
-                        
+                        if (conn.rs2 != null) {
+                            conn.rs2.close();
+                        }
+                        if (conn.pst1 != null) {
+                            conn.pst1.close();
+                        }
+                        if (conn.pst2 != null) {
+                            conn.pst2.close();
+                        }
+
+                        if (conn.conne != null) {
+                            conn.conne.close();
+                        }
+    
+          
                      
                     } catch (SQLException ex) {
                         Logger.getLogger(saveSite.class.getName()).log(Level.SEVERE, null, ex);

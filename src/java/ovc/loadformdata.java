@@ -188,13 +188,14 @@ public class loadformdata extends HttpServlet {
                     + "<div class='row'>"
                     + "<div class='col-lg-6'> <input type='hidden' name='backgroundid' value='"+backgroundinforid+"' id='backgroundid' /><input type='hidden' value='"+no_of_elements+"' name='no_of_elements' id='no_of_elements'>"
                     + "<input type='hidden' value='"+totalsum +"' name='totalsum' id='totalsum'>"
-                    + "<div class=\"form-group\">\n"
-                    + "<label for=\"exampleInputPassword6\">Assesment Type</label>\n"
-                    + "<select class=\"form-control\" name=\"asses_type\" id='asses_type' data-parsley-group=\"block0\" required>\n"
-                    + "" + asses
-                    + "</select>\n"
+                   
+                   + ""
+                    + "<div class='form-group'>"
+                    + "<label for='exampleInputPassword6'>Date of Assesment</label>"
+                    + "<input type='text' value='"+datevalue+"' onchange='checkupdate();' class='form-control' name='ass_date' id='ass_date' >"
                     + "</div>"
                     + ""
+                   
                     + ""
                     + "<div class=\"form-group\">\n"
                     + "<label for=\"exampleInputPassword6\">Name of LIP/CBO</label>\n"
@@ -229,12 +230,18 @@ public class loadformdata extends HttpServlet {
                     + "" + superviserstaff
                     + "</select>"
                     + "</div>"
-                    + ""
-                    + "<div class='form-group'>"
-                    + "<label for='exampleInputPassword6'>Date of Assesment</label>"
-                    + "<input type='text' value='"+datevalue+"' onchange='checkupdate();' class='form-control' name='ass_date' id='ass_date' >"
+                   
+                   
+                    + "<div class=\"form-group\">\n"
+                    + "<label for=\"exampleInputPassword6\">Assesment Type</label>\n"
+                    + "<select class=\"form-control\" name=\"asses_type\" id='asses_type' data-parsley-group=\"block0\" required>\n"
+                    + "" + asses
+                    + "</select>\n"
                     + "</div>"
                     + ""
+                   
+                   
+                    
                     + ""
                     + "<div class=\"form-group\">\n"
                     + "<label for=\"exampleInputPassword6\">Other Team members</label>\n"
@@ -309,7 +316,7 @@ public class loadformdata extends HttpServlet {
                     String marks=conn.rs.getString("marks");
                     
                     
-                    String nusutotalqr=" SELECT count(*) as total FROM ovc_lip.questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
+                    String nusutotalqr=" SELECT count(*) as total FROM questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
                    int nusutotal=1;
                    conn.rs_4=conn.st_4.executeQuery(nusutotalqr);
                    
@@ -382,7 +389,7 @@ public class loadformdata extends HttpServlet {
                 String elemname = "element_" + conn.rs.getString("questionid") + "#" + conn.rs.getString("response_type");
                 String marks=conn.rs.getString("marks");
                 
-                   String nusutotalqr=" SELECT count(*) as total FROM ovc_lip.questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
+                   String nusutotalqr=" SELECT count(*) as total FROM questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
                    int nusutotal=1;
                    conn.rs_4=conn.st_4.executeQuery(nusutotalqr);
                    
@@ -424,7 +431,14 @@ public class loadformdata extends HttpServlet {
                  //reset the middle table
                  
             
-            
+                if(conn.rs!=null){conn.rs.close();}   
+            if(conn.rs0!=null){conn.rs0.close();}   
+            if(conn.rs_4!=null){conn.rs_4.close();}   
+            if(conn.rs_6!=null){conn.rs_6.close();}   
+         if(conn.st0!=null){conn.st0.close();}  
+         if(conn.st!=null){conn.st.close();}  
+         if(conn.st_4!=null){conn.st_4.close();} 
+         if(conn.st_6!=null){conn.st_6.close();} 
             
 
             try (PrintWriter out = response.getWriter()) {
