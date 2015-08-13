@@ -32,6 +32,72 @@
 			Cufon.replace('h3',{textShadow: '1px 1px #000'});
 			Cufon.replace('.back');
 		</script>
+                
+                
+                <script>
+                
+                
+                
+
+if(!('contains' in String.prototype)) {
+       String.prototype.contains = function(str, startIndex) {
+                return -1 !== String.prototype.indexOf.call(this, str, startIndex);
+       };
+ }
+
+
+                
+                
+                   // $.ajax({
+                    //    url:'InternetThread',                         
+                  //  type:'post',  
+                   // dataType: 'html',  
+                   // success: function(data) {
+                     
+//                             var n = noty({text:"Data Syncing",
+//                        layout: 'top',
+//                        type: 'Success',
+//                        timeout: 7800,
+//        animation: {
+//        open: {height: 'toggle'}, // jQuery animate function property object
+//        close: {height: 'toggle'}, // jQuery animate function property object
+//        easing: 'swing', // easing
+//        speed: 500 // opening & closing animation speed
+//    }            
+//        }); 
+                    //}
+                        
+                     //    });
+                         
+                         
+                          function checkVersion(){
+//    CHECK Version------------------- 
+$("#version").html("<p>Checking for newer Version...</p>");
+var versionText="",daysRemaining,warningText="",sentOn="",version_name="";
+ $.ajax({
+                    url:"version",
+                    type:'post',
+                    dataType:'html',
+                    success:function (data){
+                        if(data.trim()==="no_internet"){
+                          $("#versionChecker").html  ("<p style='color: blue; font-size:10px;'>Unable to check if there is a newer version of DIC system due to limited or no internet connection.</p>");
+      setInterval(function(){ checkVersion(); }, 60000);          
+        }
+                        else{
+                            
+                            
+                      if(data.contains("outdated version")){
+                          $("#container").hide();   
+                      }
+$("#versionChecker").html(data);
+                        }
+  }  
+  });   
+      }
+                         
+                         </script>
+                
+                
     </head>
     <body >
         
@@ -162,7 +228,7 @@
                int year= cal.get(Calendar.YEAR); 
                                  
               dbConn conn= new dbConn();
-              conn.rs=conn.st.executeQuery("select version_name , date_updated from version");          
+              conn.rs=conn.st.executeQuery("select version_name , date_updated from version order by version_id desc limit 1");          
               while(conn.rs.next()){
 %>
                              
@@ -172,6 +238,9 @@
 conn.st.close();
 
                              %>
+                              <div id="versionChecker" style="font-weight: bolder; text-align:center;">
+                         </div><br>
+                             
 				</div>
 		
 
@@ -249,6 +318,9 @@ conn.st.close();
 								//e.preventDefault();
 							 });	
 			});
+                        
+                        
+                        checkVersion();
         </script>
         </div>
     </body>

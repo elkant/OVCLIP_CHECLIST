@@ -49,6 +49,10 @@ public class loadcbos extends HttpServlet {
             
             
                                   }
+            
+            
+            if(conn.rs!=null){conn.rs.close();}
+            if(conn.st!=null){conn.st.close();}
             response.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = response.getWriter()) {
                 

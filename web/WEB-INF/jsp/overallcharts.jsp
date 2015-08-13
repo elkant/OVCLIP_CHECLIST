@@ -6,7 +6,7 @@
 <!DOCTYPE html">
 <html>
     <head>
-        <title>Backup Data</title>
+        <title>County Reports (Charts)</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
        	<link rel="shortcut icon" href="<c:url value="/resources/images/favicon.png" />" type="image/x-icon"/>
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/newstyle.css"/>" />
@@ -19,10 +19,8 @@
             <link href="<c:url value='resources/js/css/start/jquery-ui-1.10.3.custom.css' />" rel="stylesheet"/>
 	
             <script src="<c:url value='resources/js/js/jquery-ui-1.10.3.custom.js' />"></script>
-            
              <link rel="stylesheet" href="<c:url value="/menu/ovc lip user menu_files/css3menu1/style.css" />" /> 
        
-            
             
         <script src="<c:url value="/resources/js/cufon-yui.js" />" type="text/javascript"></script>
         <script src="<c:url value="/resources/js/ChunkFive_400.font.js" />" type="text/javascript"></script>
@@ -34,6 +32,62 @@
 			Cufon.replace('h2',{textShadow: '1px 1px #fff'});
 			Cufon.replace('h3',{textShadow: '1px 1px #000'});
 			Cufon.replace('.back');
+   
+    
+     function loadcbos()
+            {
+                      // var cboname=document.getElementById("lip").value;
+            
+        var year=document.getElementById("year").value;
+        
+         $.ajax({
+                    url: "loadrreportcbos?year="+year,
+                    type: 'post',
+                    dataType: 'html',
+                    success: function (data) {
+                     document.getElementById("staffcbo").innerHTML=data;     
+                        
+                    }
+                });
+        
+
+            }
+    
+    
+                   
+    
+    
+    
+                         function loadsites()
+            {
+                       var cboname=document.getElementById("staffcbo").value;
+                         var year=document.getElementById("year").value;
+                         var period=document.getElementById("period").value;
+         $.ajax({
+                    url: "loadreportsites?cbo="+cboname+"&year="+year+"&period="+period,
+                    type: 'post',
+                    dataType: 'html',
+                    success: function (data) {
+                        
+                    document.getElementById("sitecbo").innerHTML=data;    
+                        
+                    }
+                });
+        
+
+            }
+
+              
+    function changeAction() {
+
+                var curaction = document.getElementById("reporttype").value;
+
+                document.getElementById("formid").action = curaction;
+
+
+            }
+    
+                        
 		</script>
     </head>
     <body >
@@ -56,62 +110,70 @@
         
         
         <div class="cont">
-        <div class="header" style="margin-left: 10%;margin-right: 2px;">
+                
+<div class="header" style="margin-left: 10%;margin-right: 2px;">
     <br/>
             <% if(session.getAttribute("level")!=null){
                          if(session.getAttribute("level").equals("2")){ 
             %>
-<%@include file="../../menu/admin.jsp"%>
+<%@include file="../../menu/ovc lip user menu.html"%>
 
 <%} else{%>
-<%@include file="../../menu/user.jsp"%>
+<%@include file="../../menu/ovc lip user menu.html"%>
 <%}}%>                  
 </div>
 		<div class="wrapper" >
                   
-			<h3 style="text-align: center;"><span>Create and Send Data backup</span></h3>
+			<h2 style="text-align: center;"><span> COUNTY REPORTS (CHARTS)</span></h2>
 			<br/>
 			<br/>
 			<div class="content">
 				<div id="form_wrapper" class="form_wrapper">
 					
-					<form class="login active" action="backup" style="width:400px;">
-                                            <h3 style="text-align: center;">Create backup</h3>
-						<input style="margin-left: 10%;" type="submit" value="Backup"></input>
-						<div class="bottom">
+					<form class="login active" action="OverallCharts" id="formid" style="width:400px;">
+						<h3>Enter the start and end date </h3>
+				
+                                        
+                                        <div class="column">  
+                                        
+                                         
+                                         <div>
+  <label><b>(1) Start Date</b><font color="red">  *</font></label>
+  <input type="text" style="width:280px;" readonly required class="form-control"  name="startdate" id="startdate" > 
+                                        
+                                        </div>  
+                                            
+                                            <div>
+                                                
+                                        <label><b>(2) End Date</b><font color="red">  *</font></label>
+                                        <input type="text" style="width:280px;" required class="form-control"  name="enddate" id="enddate" >
+                                           <br/>
+                                        </div> 
+                                        
+                                        
+                                        
+                                        </div>
+                                        <div class="bottom">
 							<!--<div class="remember"><input type="checkbox" /><span>Keep me logged in</span></div>-->
-							
+							<input type="submit" value="Generate"></input>
 							<!--<a href="register.jsp.html" rel="register" class="linkform">You don't have an account yet? Register here</a>-->
 							<div class="clear"></div>
 						</div>
+						
 					</form>
 					
 				</div>
                             <div class="clear"></div>
                             <br/>
                             <br/>
-                                               
+                                            
 				<div class="clear"></div>
 			</div>
                              <br/>
                              <br/>
                              
-                             <%
-               Calendar cal = Calendar.getInstance();
-               int year= cal.get(Calendar.YEAR); 
-                                 
-              dbConn conn= new dbConn();
-              conn.rs=conn.st.executeQuery("select version_name , date_updated from version");          
-              while(conn.rs.next()){
-%>
-                             
-                            <% } 
-                                  if(conn.st1!=null){conn.st1.close();}  
-                                    if(conn.st!=null){conn.st.close();}  
-                                    if(conn.rs!=null){conn.rs.close();}  
-                                    if(conn.rs1!=null){conn.rs1.close();} 
-
-                             %>
+      
+                          
 				</div>
 		
 
@@ -189,6 +251,11 @@
 								//e.preventDefault();
 							 });	
 			});
+                             
+    document.getElementById("formid").reset(); 
+      $("#startdate").datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd', maxDate: new Date()});
+      $("#enddate").datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd', maxDate: new Date()});
+                  
         </script>
         </div>
     </body>

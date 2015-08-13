@@ -51,6 +51,9 @@ public class loaddesignation extends HttpServlet {
             
                                  }
             /* TODO output your page here. You may use following sample code. */
+            if(conn.rs!=null){conn.rs.close();}
+            if(conn.st!=null){conn.st.close();}
+            
             
             out.println(des);
         } catch (SQLException ex) {

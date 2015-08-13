@@ -197,8 +197,8 @@ $( "#datepicker" ).datepicker();
                                 <td class="align_button_left"><label for="conf_password">User Level<font color="red">*</font></label></td>
                                 <td ><select id="ulevel"  required name="ulevel"  style="height:36px;">
                                     <option value="">user level</option>
-                                    <option value="0">Administrator</option>
-                                    <option value="2">System User</option>
+                                    <option value="2">Administrator</option>
+                                    <option value="1">System User</option>
                                     </select></td>
                                 <td></td>
                            </tr>   

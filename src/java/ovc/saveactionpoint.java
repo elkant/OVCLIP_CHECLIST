@@ -81,11 +81,11 @@ public class saveactionpoint extends HttpServlet {
             
             gen g= new gen();
            
-         String msg="<font color='orange'>Data for the DQA action point for the selected site and period has already been added</font>";  
+         String msg="<font color=\"orange\">Data for the DQA action point for the selected site and period has already been added</font>";  
            
            int cnt=Integer.parseInt(counter);
             for(int a=1;a<=cnt;a++){
-           
+           if(!request.getParameter("actionid"+a).trim().equals("")){
             responsibleperson=request.getParameter("select"+a);   
             expecteddate=request.getParameter("fdate"+a);   
             expecteddate2=request.getParameter("sdate"+a);   
@@ -93,13 +93,13 @@ public class saveactionpoint extends HttpServlet {
            
             String uniqid=g.uniqueid().trim();
             
-            String checkexist="select * from action_points where site_id='"+siteid+"' and period='"+period+"' and year='"+year+"' limit 1";
-            
+            String checkexist="select * from action_points where site_id='"+siteid+"' and period='"+period+"' and year='"+year+"' and responsible_person='"+responsibleperson+"' and followupid='"+action+"' limit 1";
+                System.out.println(checkexist);
             conn.rs2=conn.st2.executeQuery(checkexist);
             if(!conn.rs2.next()){
             
             
-            String insertdata="insert into action_points (tableid,followupaction,responsible_person,expected_date,expected_date2,site_id,marks_table_id,period,year,ass_date) values(?,?,?,?,?,?,?,?,?,?)";
+            String insertdata="insert into action_points (tableid,followupid,responsible_person,expected_date,expected_date2,site_id,marks_table_id,period,year,ass_date) values(?,?,?,?,?,?,?,?,?,?)";
             
             
                  conn.pst2=conn.conne.prepareStatement(insertdata);
@@ -118,10 +118,10 @@ public class saveactionpoint extends HttpServlet {
             
                                   }
              else {
-       msg="<font color='green'>Data added succesfully </font>";  
+       msg="<font color=\"green\">Data added succesfully </font>";  
           
                     }
-            
+            }
             }//end of checker of if data has already been inserted
            
             
@@ -144,7 +144,8 @@ public class saveactionpoint extends HttpServlet {
          
             
            session.setAttribute("actionmsg",msg); 
-            System.out.println(msg);
+           out.println(msg);
+            System.out.println("____________"+msg);
            //response.sendRedirect("dataentry.htm");
         } catch (SQLException ex) {
             Logger.getLogger(saveactionpoint.class.getName()).log(Level.SEVERE, null, ex);

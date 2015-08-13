@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ajax;
+package ovc;
 
 import database.dbConn;
 import java.io.IOException;
@@ -20,50 +20,42 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author MANUEL
  */
-public class loadrreportcbos extends HttpServlet {
+public class isdqaformupdateabe extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         try {
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+           
+          dbConn conn= new dbConn();
+          String site="";
+          String period="";
+          String year="";
+          
+          site=request.getParameter("site");
+          period=request.getParameter("period");
+          year=request.getParameter("year");
+          
+          
+     String checker="select * from action_points where site_id='"+site+"' and period='"+period+"' and year='"+year+"'limit 1";     
+     conn.rs=conn.st.executeQuery(checker);
+     
+     if(conn.rs.next()){
+     out.println("update");
+      System.out.println("update");
+     
+     }
+     else {
+        out.println("new");
+         System.out.println("new");
+     }
+         if(conn.rs!=null){conn.rs.close();}   
+         if(conn.st!=null){conn.st.close();}   
             
-            String districtid="";
-            dbConn conn= new dbConn();
-            String createdtable="<option value=''>No data available for selected year</option>";
-            String year=request.getParameter("year");
-            //String getsites="  select * from cbo where district_id='"+cbo+"'";
-            String getsites="  select cboid,cbo.cbo from cbo  join backgroundinfor on cbo.cboid=backgroundinfor.cbo where year='"+year+"' order by cbo";
-            conn.rs=conn.st.executeQuery(getsites);
-            int count=0;
-            while(conn.rs.next()){
-            if(count==0){
-            createdtable="<option value=''>Select Cbo</option>";
-            }
-            createdtable+="<option value='"+conn.rs.getString(1)+"'>"+conn.rs.getString(2)+"</option>";
-            
-            count++;
-                                  }
-            if(year.equals("")){
-            createdtable="<option value=''>Select Year first</option>";
-            }
-            if(conn.rs!=null){conn.rs.close();}
-            if(conn.st!=null){conn.st.close();}
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter()) {
-                
-                out.println(createdtable);
-            }
-        }   catch (SQLException ex) {
-            Logger.getLogger(loadcbos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(isupdatable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

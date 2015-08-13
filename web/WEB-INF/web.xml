@@ -133,6 +133,22 @@
         <servlet-name>InternetThread</servlet-name>
         <servlet-class>data.InternetThread</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>version</servlet-name>
+        <servlet-class>data.version</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>assesmentType</servlet-name>
+        <servlet-class>ovc.assesmentType</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>loadactionpoint</servlet-name>
+        <servlet-class>ovc.loadactionpoint</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>isdqaformupdateabe</servlet-name>
+        <servlet-class>ovc.isdqaformupdateabe</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>springapp</servlet-name>
         <url-pattern>*.htm</url-pattern>
@@ -260,6 +276,22 @@
     <servlet-mapping>
         <servlet-name>InternetThread</servlet-name>
         <url-pattern>/InternetThread</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>version</servlet-name>
+        <url-pattern>/version</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>assesmentType</servlet-name>
+        <url-pattern>/assesmentType</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>loadactionpoint</servlet-name>
+        <url-pattern>/loadactionpoint</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>isdqaformupdateabe</servlet-name>
+        <url-pattern>/isdqaformupdateabe</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>900000</session-timeout>

@@ -148,8 +148,33 @@
 
                             <form id="wizard-example-5" action="" data-parsley-validate>
                                 <fieldset>
-                                    <legend id="ab"></legend>
+                                    <legend id="ab">Section A: Background Information</legend>
                                     <div class="row">
+                                        <div class="col-lg-6"> 
+                                        
+                    <div class='form-group'>
+                    <label for='exampleInputPassword6'>Date of Assesment</label>"
+                    <input type='text' onchange='checkupdate();' class='form-control' name='ass_date' id='ass_date' >
+                    </div>
+                    
+                   
+                  
+                   <div class="form-group">
+                  <label for="exampleInputPassword6">Name of LIP/CBO</label>
+                  <select class="form-control" onchange='loadsites1();' name="lip" id='lip' data-parsley-group='block0' required>
+                  
+                  </select>
+                  </div>
+                   
+                  <div class="form-group">
+                  <label for="exampleInputPassword6">Site Visited</label>
+                  <select class="form-control" name="site" id='site' onchange='checkupdate();' data-parsley-group="block0" >
+                  <option value=''>Select Site</option>
+                  </select>
+                  </div>
+                                            
+                                            
+                                        </div>
                                       </div>
                                 </fieldset>
                               </form>
@@ -267,11 +292,11 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
                                     
                                     }
                                     
-                                   if(conn.st1!=null){conn.st1.close();}  
+                                    
+                                    if(conn.st1!=null){conn.st1.close();}  
                                     if(conn.st!=null){conn.st.close();}  
                                     if(conn.rs!=null){conn.rs.close();}  
-                                    if(conn.rs1!=null){conn.rs1.close();}  
-                                    
+                                    if(conn.rs1!=null){conn.rs1.close();} 
                                     
                                     %>
                                     
@@ -329,19 +354,29 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
             //$(window).load(function(){
             //    
             //});
-
-            $(function () {
-
-                $('.loading').show();
+            
+            
+             //$('.loading').show();
                 $.ajax({
-                    url: 'loadform1',
+                    url: 'loadcbos',
                     type: 'post',
                     dataType: 'html',
                     success: function (data) {
-                        document.getElementById("wizard-example-5").innerHTML = data;
+                        document.getElementById("lip").innerHTML = data;
+                  }});
+
+            $(function () {
+
+                //$('.loading').show();
+                //$.ajax({
+                   // url: 'loadactionpoint',
+                   // type: 'post',
+                    //dataType: 'html',
+                   // success: function (data) {
+                      //  document.getElementById("wizard-example-5").innerHTML = data;
                   
                       var rfr=  $("#wizard-example-5").stepFormWizard({
-                            height: '500px',
+                            height: 'auto',
                             theme:'sky',
                             nextBtn: $('<a class="next-btn sf-right sf-btn" href="#">NEXT</a>'),
                             prevBtn: $('<a class="prev-btn sf-left sf-btn" href="#">PREVIOUS</a>'),
@@ -407,11 +442,10 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
                         $("#ass_date").datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd', maxDate: new Date()});
  
                         $('.loading').hide();
-                        $('#teammembers').select2();
-                        $('#teamleader').select2();
-                    }
+                  
+                  //  }
 
-                });
+               // });
 
             });
 
@@ -1297,7 +1331,7 @@ else{quarters="0";}
 year=fulldates[0];
 //now call an ajax function whose return
                  $.ajax({
-                    url: "isupdatable?site="+site+"&period="+quarters+"&year="+year,
+                    url: "isdqaformupdateabe?site="+site+"&period="+quarters+"&year="+year,
                     type: 'post',
                     dataType: 'text',
                     success: function (data) {
@@ -1376,7 +1410,7 @@ year=fulldates[0];
                        $('.loading').show(); 
                         
             $.ajax({
-                    url: "loadformdata?site="+site+"&period="+quarters+"&year="+year+"&cbo="+cbo,
+                    url: "loadactionpoint?site="+site+"&period="+quarters+"&year="+year+"&cbo="+cbo,
                     type: 'post',
                     dataType: 'text',
                     success: function (data) {

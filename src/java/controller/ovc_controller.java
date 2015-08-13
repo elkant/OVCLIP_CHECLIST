@@ -40,6 +40,11 @@ public class ovc_controller {
     public String handlecharts() {
         return "charts"; // forward to view index.jsp
                                    }  
+  
+       @RequestMapping("/editactionpoint.htm")
+    public String editapoint() {
+        return "editactionpoint"; // forward to view editactionpoint.jsp
+                                   } 
     
  @RequestMapping("/logout.htm")
     public String handlelogoutGet() {

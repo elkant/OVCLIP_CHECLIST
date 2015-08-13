@@ -66,7 +66,8 @@ session=request.getSession();
          
             out.println(current_districts);
             
-             
+           if(conn.rs!=null){conn.rs.close();}
+            if(conn.st!=null){conn.st.close();}  
            
   
         } catch (SQLException ex) {

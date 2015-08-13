@@ -26,6 +26,7 @@
 	<li class="topmenu"><a href="dataentry.htm" style="width:92px;height:25px;line-height:25px;"><img src="ovc lip user menu_files/css3menu1/address-book.png" alt=""/>Data Entry</a></li>
 	<li class="topmenu"><a href="#" style="height:25px;line-height:25px;"><span><img src="ovc lip user menu_files/css3menu1/pencil.png" alt=""/>Edit Entries</span></a>
 	<ul>	
+	<li><a href="editactionpoint.htm">Edit Action Point</a></li>	
 	<li><a href="#">Edit Staff</a></li>	
 	</ul>
         </li>

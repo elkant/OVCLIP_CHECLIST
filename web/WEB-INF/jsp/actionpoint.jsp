@@ -332,7 +332,7 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
   type: 'POST',
   url: 'saveactionpoint',
   data:form,
-  dataType: 'text',
+  dataType: 'html',
   success: function(data) {
       
        $('.loading1').hide();
