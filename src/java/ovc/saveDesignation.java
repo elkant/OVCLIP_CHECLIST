@@ -38,30 +38,34 @@ public class saveDesignation extends HttpServlet {
             
             
             String dis=request.getParameter("dis");
-            String msg="<font color='green'> "+dis+" Added succesfully !. refresh the page to see the added designation</font>";
+            String msg="<font color='green'> "+dis+" added succesfully !</font>";
             
             dbConn conn=new dbConn();
-            
-            String insertdes="Insert into designation (designation) value ('"+dis+"') ";
+            IdGenerator ig=new IdGenerator();
+            String id=ig.current_id().trim();
+            String insertdes="Insert into designation (id,designation) value ('"+id+"','"+dis+"') ";
             //check first whether the designation exists
             
-            
-            String check="select designation from designation where designation like '"+dis+"'";
+            String optionsadded=id+"%"+dis;
+            String check="select * from designation where designation like '"+dis+"'";
             
             
             conn.rs=conn.st.executeQuery(check);
             
-            if (!conn.rs.next()){
+            if (conn.rs.next()){
                
-                
+                  msg="<font color='red'> "+dis+" Already exists </font>";
                 //excecute the insert statement
+                optionsadded=conn.rs.getString(1)+"%"+dis;
                 
-                
-                conn.st0.executeUpdate(insertdes);
+              
                 
             }
             else {
-            msg="<font color='red'> "+dis+" Already exists </font>";
+            conn.st0.executeUpdate(insertdes);
+            //get the id
+            
+            
                  }
             
                if(conn.rs!=null){conn.rs.close();}   
@@ -74,7 +78,7 @@ public class saveDesignation extends HttpServlet {
             try (PrintWriter out = response.getWriter()) {
                 /* TODO output your page here. You may use following sample code. */
                 
-                out.println(msg);
+                out.println(msg+"@"+optionsadded);
             }
         }   catch (SQLException ex) {
             Logger.getLogger(saveDesignation.class.getName()).log(Level.SEVERE, null, ex);

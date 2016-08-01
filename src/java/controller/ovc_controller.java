@@ -114,7 +114,10 @@ public class ovc_controller {
     public String handledataentryGet() {
         return "dataentry"; // forward to view index.jsp
                                    }
-    
+       @RequestMapping("/overallcharts.htm")
+    public String handleocGet() {
+        return "overallcharts"; // forward to view index.jsp
+                                   }
     
     @RequestMapping("*")
 @ResponseBody

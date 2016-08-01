@@ -113,14 +113,16 @@
                 
 <div class="header" style="margin-left: 10%;margin-right: 2px;">
     <br/>
-            <% if(session.getAttribute("level")!=null){
-                         if(session.getAttribute("level").equals("2")){ 
-            %>
-<%@include file="../../menu/ovc lip user menu.html"%>
 
-<%} else{%>
-<%@include file="../../menu/ovc lip user menu.html"%>
-<%}}%>                  
+                <% if (session.getAttribute("level") != null) {
+                        if (session.getAttribute("level").equals("2")) {
+                %>
+                <%@include file="../../menu/admin.jsp"%>
+
+                <%} else {%>
+                <%@include file="../../menu/user.jsp"%>
+                <%}
+    }%>                 
 </div>
 		<div class="wrapper" >
                   

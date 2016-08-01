@@ -337,9 +337,29 @@ public class countyreport extends HttpServlet {
             
             //cbo name
             //create header three
+            
+            //count the number of sites in that county that were served
+             String sitesserved="select  count(site) as sites from backgroundinfor join (sites join district on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where  district.county_id='"+countyids.get(u).toString()+"' and ass_date between '"+startdate+"' and '"+enddate+"' ";
+            //if the current countyid is 0, then the where code should not specify the county name 
+          
+         if(countyids.get(u).toString().equals("1000")){
+           
+         sitesserved=" select count(site) as sites from backgroundinfor join (sites join district on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where   ass_date between '"+startdate+"' and '"+enddate+"' ";
+           
+                                                        }
+            int no=0;
+         conn.rs4=conn.st4.executeQuery(sitesserved);
+        String sitesmsg="";
+         while(conn.rs4.next()){
+        no=conn.rs4.getInt(1);
+         sitesmsg="( "+no+" Site Supervised )";
+         if(no>1){ sitesmsg="( "+no+" Sites supervised )";}
+         if(no==0){ sitesmsg="( "+no+" Sites supervised )";}
+         }
+         
             HSSFRow header3=shet2.createRow(2);
             HSSFCell cel3=header3.createCell(0);
-            cel3.setCellValue(countynames.get(u).toString());
+            cel3.setCellValue(countynames.get(u).toString()+" "+sitesmsg);
             cel3.setCellStyle(orangestyle);
             
             
@@ -381,7 +401,7 @@ public class countyreport extends HttpServlet {
             
             String mywhere=" district.county_id='"+countyids.get(u).toString()+"' and ass_date between '"+startdate+"' and '"+enddate+"' ";
             //if the current countyid is 0, then the where code should not specify the county name 
-          
+          String countqry="";
             if(countyids.get(u).toString().equals("1000")){
             mywhere="  ass_date between '"+startdate+"' and '"+enddate+"' ";
          
@@ -738,8 +758,14 @@ public class countyreport extends HttpServlet {
             if (conn.rs != null) {
                 conn.rs.close();
             }
+            if (conn.rs4 != null) {
+                conn.rs4.close();
+            }
             if (conn.st != null) {
                 conn.st.close();
+            }
+            if (conn.st4 != null) {
+                conn.st4.close();
             }
     
              

@@ -47,7 +47,7 @@ public class InternetThread extends HttpServlet {
                            
            if(session.getAttribute("runningstatus")!=null){
            
-           //dont call the thread
+           //dont call the thread. It means there is a running status
            }
            
            else {

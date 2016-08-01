@@ -195,8 +195,11 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
                                     
                                     <table>
                                         
-                                        <tr><td>Designation</td><td><input class="form-control" type="text" id="designation" name="designation"></td></td>
-                                       <tr><td>  <input type="reset" style="height:36px;width:100px;" value="reset fields"></td><td >
+                                        <tr><td>Designation</td>
+                                            <td><input class="form-control" type="text" id="designation" name="designation"></td></td>
+                                       <tr><td>
+                                               <input type="reset" style="height:36px;width:100px;" value="reset fields">
+                                           </td><td >
                                             
                                         <input type="text" value="Save" id="generate1" class ='modal_close' onclick="saveDesignation();" readonly style=" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 50px; width:140px;text-align:center ; color:white ;background:coral; border-style:ridge ;" />
                         
@@ -451,8 +454,8 @@ v.innerHTML="<div class='form-group'><select name='select"+rws2+"' class='form-c
 b.innerHTML="<div class='form-group'><input class='form-control' type='text' id='fdate"+rws2+"' name='fdate"+rws2+"'></div>";
 c.innerHTML="<div class='form-group'><input class='form-control' type='text' id='sdate"+rws2+"' name='sdate"+rws2+"'></div>";
    
-        $("#fdate"+rws2).datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd', maxDate: new Date()});
-        $("#sdate"+rws2).datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd', maxDate: new Date()});
+        $("#fdate"+rws2).datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd'});
+        $("#sdate"+rws2).datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd'});
                         
         }
    
@@ -737,9 +740,18 @@ return true;
                     type: 'post',
                     dataType: 'html',
                     success: function (data) {
+                        
+                        var msgs=data.trim().split("@");
+                        
+                        var mySelect = $('select');
+                        //get the just added option and value and append to each select 
+                        var opts=msgs[1].split("%");
+    
+$('select').append("<option value="+opts[0]+" >"+opts[1]+"</option>");
+                        
                         //now reload the staff list
                   document.getElementById("designation").value="";
-                    var n = noty({text:"<h3>"+data+"</h3>",
+                    var n = noty({text:"<h3>"+msgs[0]+"</h3>",
                         layout: 'center',
                         type: 'Success',
                         timeout: 2800,

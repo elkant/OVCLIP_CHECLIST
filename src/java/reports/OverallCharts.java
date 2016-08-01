@@ -39,7 +39,7 @@ import ovc.gen;
  *
  * @author MANUEL
  */
-public class barCharts extends HttpServlet {
+public class OverallCharts extends HttpServlet {
     HSSFWorkbook wb=null;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -69,23 +69,34 @@ public class barCharts extends HttpServlet {
             String startdate="2015-01-01";
             String enddate="2015-03-30";
             
-            startdate=request.getParameter("startdate");
-            enddate=request.getParameter("enddate");
+           // startdate=request.getParameter("startdate");
+            //enddate=request.getParameter("enddate");
             
             
-          
-//            year=request.getParameter("year");
-            //site=request.getParameter("sitecbo");
-            //period=request.getParameter("period");
-            //cbo=request.getParameter("staffcbo");
+   String getdistinctsites="SELECT county.county_id as countyid,county_name FROM ovc_lip.backgroundinfor join (sites join (district join county on district.county_id=county.county_id) on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where ass_date between '"+startdate+"' and '"+enddate+"' group by county_name ";
             
-            
+            ArrayList countyids=new ArrayList();
+            ArrayList countynames=new ArrayList();
+            countyids.add("1000");
+            countynames.add("OVERALL COUNTIES REPORT");
+            //ArrayList years=new ArrayList();
+            //ArrayList periods=new ArrayList();
+            //ArrayList cbos=new ArrayList();
+            conn.rs=conn.st.executeQuery(getdistinctsites);
+            while(conn.rs.next()){
+           
+                countyids.add(conn.rs.getString(1));                
+                countynames.add(conn.rs.getString(2).toUpperCase()+" COUNTY");                
+                               
+           
+             
+                        }
             String sitename="";
             String cboname="";
             
  //begin a loop that will create as many reports as possible
     
-           
+            for(int u=0;u<countyids.size();u++){    
             
             HSSFFont font=wb.createFont();
             font.setFontHeightInPoints((short)12);
@@ -285,7 +296,7 @@ public class barCharts extends HttpServlet {
             dnamestyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
             
             
-            shet2=wb.createSheet("Column Charts Per Cbo");
+            shet2=wb.createSheet(countynames.get(u).toString().toUpperCase());
             shet2.setColumnWidth(0, 12000);
             shet2.setColumnWidth(1, 12000);
             shet2.setColumnWidth(2, 4000);
@@ -306,10 +317,19 @@ public class barCharts extends HttpServlet {
  //11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111           
  //11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111  
             
-     
+    
             
-   String gettables= "SELECT avg(value) as domainvalue,domain_totals.domainid as domainid,domain_name, section_name,cbo,avg(aggregate_sum) as aggregate_sum FROM ovc_lip.domain_totals join (sites join cbo on sites.cbo_id=cbo.cboid) on domain_totals.site=sites.site_id join ( domains join sections on domains.section_id=sections.section_id ) on domain_totals.domainid=domains.domain_id where  date between '"+startdate+"' and '"+enddate+"' group by cbo.cboid,domainid order by cbo,domainid";
-           
+   //String gettables= "SELECT  avg(aggregate_sum) as aggregate_sum FROM ovc_lip.domain_totals join (sites join cbo on sites.cbo_id=cbo.cboid) on domain_totals.site=sites.site_id join ( domains join sections on domains.section_id=sections.section_id ) on domain_totals.domainid=domains.domain_id "+mywhere+" group by cbo.cboid,domainid order by cbo,domainid";
+  // String gettables= "SELECT avg(value) as domainvalue,domain_totals.domainid as domainid,domain_name, section_name,cbo,avg(aggregate_sum) as aggregate_sum FROM ovc_lip.domain_totals join (sites join cbo on sites.cbo_id=cbo.cboid) on domain_totals.site=sites.site_id join ( domains join sections on domains.section_id=sections.section_id ) on domain_totals.domainid=domains.domain_id "+mywhere+" group by cbo.cboid,domainid order by cbo,domainid";
+     
+  String gettables= "SELECT avg(value) as domainvalue,domain_totals.domainid as domainid,domain_name,section_name ,avg(aggregate_sum) as aggregate_sum , domains.section_id as secid FROM ovc_lip.domain_totals join (sites join (district join county on district.county_id=county.county_id) on sites.districtid=district.district_id) on domain_totals.site=sites.site_id join (domains join sections on domains.section_id=sections.section_id) on domain_totals.domainid=domains.domain_id  where county.county_id='"+countyids.get(u)+"' and date between '"+startdate+"' and '"+enddate+"' group by domain_totals.domainid,county_name order by domainid";
+       //if its the first county, themn skip the county part
+            if(countyids.get(u).toString().equalsIgnoreCase("1000")){
+             
+                gettables= "SELECT avg(value) as domainvalue,domain_totals.domainid as domainid,domain_name,section_name ,avg(aggregate_sum) as aggregate_sum , domains.section_id as secid FROM ovc_lip.domain_totals  join (domains join sections on domains.section_id=sections.section_id) on domain_totals.domainid=domains.domain_id  where  date between '"+startdate+"' and '"+enddate+"' group by domain_totals.domainid order by domainid";
+       
+            } 
+   
             System.out.println(gettables);
             conn.rs = conn.st.executeQuery(gettables);
             int rwcount=0;
@@ -342,10 +362,30 @@ public class barCharts extends HttpServlet {
                 //if its the first row in each 
                 if(isrow1){
                     isrow1=false;
+                    
+                    
+                       String sitesserved="select  count(site) as sites from backgroundinfor join (sites join district on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where  district.county_id='"+countyids.get(u).toString()+"' and ass_date between '"+startdate+"' and '"+enddate+"' ";
+            //if the current countyid is 0, then the where code should not specify the county name 
+          
+         if(countyids.get(u).toString().equals("1000")){
+           
+         sitesserved=" select count(site) as sites from backgroundinfor join (sites join district on sites.districtid=district.district_id) on backgroundinfor.site=sites.site_id where   ass_date between '"+startdate+"' and '"+enddate+"' ";
+           
+                                                        }
+            int no=0;
+         conn.rs4=conn.st4.executeQuery(sitesserved);
+          String sitesmsg="";
+         while(conn.rs4.next()){
+        no=conn.rs4.getInt(1);
+         sitesmsg="( "+no+" Site Supervised )";
+         if(no>1){ sitesmsg="( "+no+" Sites supervised )";}
+         if(no==0){ sitesmsg="( "+no+" Sites supervised )";}
+         }
+                    
                 rwx=shet2.createRow(rwcount);
                 
                 HSSFCell headercel=rwx.createCell(0);
-                headercel.setCellValue(conn.rs.getString("cbo"));
+                headercel.setCellValue(countynames.get(u).toString().toUpperCase()+" "+sitesmsg);
                 headercel.setCellStyle(style);
                 rwx.setHeightInPoints(hearderheight);
                 
@@ -499,18 +539,24 @@ public class barCharts extends HttpServlet {
             
             ///=========================end of while loop 
             
+            }//end of each loop
             
             
             
-            
-            
-              if (conn.rs != null) {
+               if (conn.rs != null) {
                 conn.rs.close();
+            }
+            if (conn.rs4 != null) {
+                conn.rs4.close();
             }
             if (conn.st != null) {
                 conn.st.close();
             }
-
+            if (conn.st4 != null) {
+                conn.st4.close();
+            }
+    
+            
            
                   
              
@@ -524,7 +570,7 @@ public class barCharts extends HttpServlet {
             response.setContentType("application/ms-excel");
             response.setContentLength(outArray.length);
             response.setHeader("Expires:", "0"); // eliminates browser caching
-            response.setHeader("Content-Disposition", "attachment; filename=OVC_CBO_CHARTS_FROM_"+startdate+"_TO_"+enddate+".xls");
+            response.setHeader("Content-Disposition", "attachment; filename=OVC_COUNTY_CHARTS_FROM_"+startdate+"_TO_"+enddate+".xls");
             OutputStream outStream = response.getOutputStream();
             outStream.write(outArray);
             outStream.flush();

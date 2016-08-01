@@ -149,6 +149,14 @@
         <servlet-name>isdqaformupdateabe</servlet-name>
         <servlet-class>ovc.isdqaformupdateabe</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OverallCharts</servlet-name>
+        <servlet-class>reports.OverallCharts</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>updateactionpoint</servlet-name>
+        <servlet-class>ovc.updateactionpoint</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>springapp</servlet-name>
         <url-pattern>*.htm</url-pattern>
@@ -292,6 +300,14 @@
     <servlet-mapping>
         <servlet-name>isdqaformupdateabe</servlet-name>
         <url-pattern>/isdqaformupdateabe</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OverallCharts</servlet-name>
+        <url-pattern>/OverallCharts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateactionpoint</servlet-name>
+        <url-pattern>/updateactionpoint</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>900000</session-timeout>

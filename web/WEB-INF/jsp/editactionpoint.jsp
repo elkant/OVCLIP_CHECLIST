@@ -51,24 +51,17 @@
 
         <div class="theme-changer">
             <div class="theme-inner">
-                <div class="headtext">
-
-                    AGGREGATE PERCENTAGE
-                </div>
+             
                 <div class="btn-group-vertical">
                     <br/>
                     <!--                    <a  href="dataentry.htm?t=sea" class="bt-sea btn btn-default">DeepSea</a>
                                             <a  href="dataentry.htm?t=sky" class="bt-sky btn btn-default">NightSky</a>
                                             <a  href="dataentry.htm?t=simple" class="bt-simple btn btn-default">Simple</a>
                                             <a  href="dataentry.htm?t=circle" class="bt-circle btn btn-default">Circle</a>-->
-                    <a style="background:#46b8da;" href="#" class="bt-circle btn btn-default"><span id="agg_percentage" style="font-size: 30px">0%</span></a>
-                    <a id="modal_trigger" style="color:red;background-color: white;" href="#modal" class="btn"><img src="<c:url value="/resources/images/add.gif" />" /> Add Staff </a>
-                    <% if(session.getAttribute("level") != null) {
-                        if (session.getAttribute("level").equals("2")) {
-                %>
-                    <a id="modal_trigger1" style="color:red;background-color: white;" href="#sitemodal" class="btn"><img src="<c:url value="/resources/images/add.gif" />" />Add Site</a>
-                <%}}%>
-                </div>
+                    <a id="coutertotal" style="color:red;background-color: white;" href="#" class="btn"><h3><b>0</b> Rows</h3></a>
+               
+                    <a id="modal_trigger" style="color:red;background-color: white;width:127px;" href="#modal" class="btn"><img src="<c:url value="/resources/images/add.gif" />" /> Add Designation </a>
+               </div>
             </div>
         </div>
         <style>
@@ -89,6 +82,10 @@
                 background: rgba(255,255,255,0.5);
             }
 
+           
+            .nobr { white-space: nowrap }
+
+            
         </style> 
 
 
@@ -148,7 +145,7 @@
 
                             <form id="wizard-example-5" action="" data-parsley-validate>
                                 <fieldset>
-                                    <legend id="ab">Section A: Background Information</legend>
+                                    <legend id="ab">Background Information</legend>
                                     <div class="row">
                                         <div class="col-lg-6"> 
                                         
@@ -231,18 +228,20 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
 
                         <section class="popupBody" style="width:550px;">
                             <div class="add_staff">
-                                <form name="addStaff" id="addStaff" action='saveStaff' style="width:350px;">
+                                 <form name="adddesination" id="adddesination" action='saveDesignation' style="width:350px;">
+                                    
+       
+                                    
+                                    
                                     <table>
-                                        <tr><td>First Name</td><td><input class="form-control" type="text" id="fname" name="fname"></td></td>
-                                        <tr><td>Last Name</td><td><input class="form-control" type="text" id="mname" name="mname"></td></td>
-                                        <tr><td>Phone Number</td><td><input placeholder="optional" class="form-control" onkeypress=" return numbers(event);" type="text" id="phone" name="phone"></td></td>
-                                        <tr><td><span id="catlabel">Category</td><td><select onchange="togglesites();" class="form-control" name="position" id="position"><%=opts%></select></td></td>
-                                      
-                                        <tr><td><span style="display:none;" id="cbolabel">Cbo</span></td><td><select style="display:none;" class="form-control" onchange="loadsites();"  name="staffcbo" id="staffcbo" ><%=cbolists%></select></td></td>
-                                        <tr><td><span style="display:none;" id="sitelabel">Site</span></td><td><select style="display:none;" class="form-control" name="sitecbo" id="sitecbo"></select></td></td>
-                                        <tr><td>  <input type="reset" style="height:36px;width:100px;" value="reset fields"></td><td >
+                                        
+                                        <tr><td>Designation</td>
+                                            <td><input class="form-control" type="text" id="designation" name="designation"></td></td>
+                                       <tr><td>
+                                               <input type="reset" style="height:36px;width:100px;" value="reset fields">
+                                           </td><td >
                                             
-                                        <input type="text" value="Save" id="generate1" class ='generate1' onclick="savestaff();" readonly style=" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 50px; width:140px;text-align:center ; color:white ;background:coral; border-style:ridge ;" />
+                                        <input type="text" value="Save" id="generate1" class ='modal_close' onclick="saveDesignation();" readonly style=" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 50px; width:140px;text-align:center ; color:white ;background:coral; border-style:ridge ;" />
                         
                                                         
                                             </td><td><p id="msg"></p></td></tr>
@@ -324,7 +323,105 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
                                         
                                         
                                         
+                 <div id="sitemodal" class="popupContainer" style="display:none;width:500px;">
+                        <header class="popupHeader">
+                          
+                            <span class="header_title">Add A Designation </span>
+                            <span class="modal_close"><img src="<c:url value="/resources/images/close.png" />" width="24px"></i></span>
+                        </header>
+
+                        <section class="popupBody" style="width:550px;">
+                            <div class="add_staff">
+                                <form name="adddesination" id="adddesination" action='saveDesignation' style="width:350px;">
+                                    
+       
+                                    
+                                    
+                                    <table>
                                         
+                                        <tr><td>Designation</td>
+                                            <td><input class="form-control" type="text" id="designation" name="designation"></td></td>
+                                       <tr><td>
+                                               <input type="reset" style="height:36px;width:100px;" value="reset fields">
+                                           </td><td >
+                                            
+                                        <input type="text" value="Save" id="generate1" class ='modal_close' onclick="saveDesignation();" readonly style=" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 50px; width:140px;text-align:center ; color:white ;background:coral; border-style:ridge ;" />
+                        
+                                                        
+                                            </td><td><p id="msg"></p></td></tr>
+                                    </table>   
+
+
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+                                        
+                                        
+                   <div id="rowsmodal" class="popupContainer" style="display:none;width:500px;">
+                        <header class="popupHeader">
+                          
+                            <span class="header_title">Enter Number of Rows To Add</span>
+                            <span class="submitrows"><img src="<c:url value="/resources/images/close.png" />" width="24px"></i></span>
+                        </header>
+
+                        <section class="popupBody" style="width:550px;">
+                            <div class="add_staff">
+                                <form name="addrowsform" id="addrowsform" action='#' style="width:350px;">
+                                    
+       
+                                    
+                                    
+                                    <table>
+                                        
+                                        <tr><td>No of Rows</td><td><input class="form-control" type="text" id="custrows" name="custrows"></td></td>
+                                       <tr><td>  </td><td >
+                                            
+                                        <input type="text" value="ADD" id="submitrows" class ='submitrows' onclick="customrows();" readonly style=" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 50px; width:140px;text-align:center ; color:white ;background:coral; border-style:ridge ;" />
+                        
+                                                        
+                                            </td><td><p id="msg"></p></td></tr>
+                                    </table>   
+
+
+                                </form>
+                            </div>
+                        </section>
+                    </div>                      
+                                        
+                      
+                        
+                            <div id="delrowsmodal" class="popupContainer" style="display:none;width:500px;">
+                        <header class="popupHeader">
+                          
+                            <span class="header_title">Enter Number of Rows To Delete</span>
+                            <span class="submitrows1"><img src="<c:url value="/resources/images/close.png" />" width="24px"></i></span>
+                        </header>
+
+                        <section class="popupBody" style="width:550px;">
+                            <div class="add_staff">
+                                <form name="delrowsform" id="delrowsform" action='#' style="width:350px;">
+                                    
+       
+                                    
+                                    
+                                    <table>
+                                        
+                                        <tr><td>No of Rows</td><td><input class="form-control" type="text" id="delcustrows" name="delcustrows"></td></td>
+                                       <tr><td>  </td><td >
+                                            
+                                        <input type="text" value="DELETE" id="submitrows1" class ='submitrows1' onclick="delcustomrows();" readonly style=" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 50px; width:140px;text-align:center ; color:white ;background:coral; border-style:ridge ;" />
+                        
+                                                        
+                                            </td><td><p id="msg"></p></td></tr>
+                                    </table>   
+
+
+                                </form>
+                            </div>
+                        </section>
+                    </div> 
+                                                
                                         
                                         
                 </div>
@@ -351,6 +448,8 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
             
             
         <script>
+            
+            var rfr=null;
             //$(window).load(function(){
             //    
             //});
@@ -367,20 +466,14 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
 
             $(function () {
 
-                //$('.loading').show();
-                //$.ajax({
-                   // url: 'loadactionpoint',
-                   // type: 'post',
-                    //dataType: 'html',
-                   // success: function (data) {
-                      //  document.getElementById("wizard-example-5").innerHTML = data;
-                  
-                      var rfr=  $("#wizard-example-5").stepFormWizard({
+              
+                       rfr=  $("#wizard-example-5").stepFormWizard({
                             height: 'auto',
                             theme:'sky',
+                              showNav:false,
                             nextBtn: $('<a class="next-btn sf-right sf-btn" href="#">NEXT</a>'),
                             prevBtn: $('<a class="prev-btn sf-left sf-btn" href="#">PREVIOUS</a>'),
-                            finishBtn: $('<a class="finish-btn sf-right sf-btn" href="#">SAVE</a>'),
+                            finishBtn: $('<a class="finish-btn sf-right sf-btn" href="#"></a>'),
             onNext: function(i, wizard) {
             return $('form', wizard).parsley().validate('block' + i);
                                         },                
@@ -393,14 +486,14 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
                                    
                                    $.ajax({
   type: 'POST',
-  url: 'savedata',
+  url: '#',
   data:form,
   dataType: 'text',
   success: function(data) {
       
        $('.loading1').hide();
     //alert(data);
-              var n = noty({text:"<h3>"+data+".Now proceeding to Dqa action point section.</h3>",
+              var n = noty({text:"<h3>"+data+"</h3>",
                         layout: 'center',
                         type: 'Success',
                         timeout: 2800,
@@ -413,7 +506,7 @@ cbolists+="<option value='"+conn.rs1.getString(1)+"'>"+conn.rs1.getString(2)+"</
     callback: {
    
         afterShow: function() {
-            location.href='actionpoint.htm';
+            location.href='editactionpoint.htm';
             
         }
     }
@@ -938,109 +1031,7 @@ if(submitedvalue.indexOf(">")===0||submitedvalue.indexOf("<")===0){
 //                document.getElementById("agg_percentage").innerHTML = perct + "%";
 //
 //            }
-function totalsum(){
-    var ttl=0;
-    for (d=1;d<=12;d++){
-      var nv=document.getElementById("domaininput" + d).value.trim();
-      
-     if(nv!==""){
-         ttl=parseFloat(ttl)+parseFloat(nv);
-           }   
-       
-    }
-     //now devide by 12
-        ttl=ttl/12;
-        ttl=ttl*100;
-        
-       
-  document.getElementById("totalsum").value = ttl;
-  //round off to one decimal place
-  ttl=N(ttl,1);
-  
-  document.getElementById("agg_percentage").innerHTML =ttl + "%";
-    
-}
 
-function disableurl(ids,val,domain){
- //val is the value of the selected element that controls the others
-var res=ids.split("#"); 
-
-var idnos=res[1].split("_");
-
- if(val.value==="Yes"){
-  //enable the elements  
-   for(a=0;a<idnos.length;a++){
-   var curelem="element_"+idnos[a];
-   var curcomment="comment"+idnos[a];
-   document.getElementById(curelem).disabled =false;
-   document.getElementById(curcomment).disabled =false;
-   //make required false
-     }
-            
-                      }
-else if(val.value===res[0]){
-    //if the set value is ano, then you have to disable this field
-    //No
-    
-       for(a=0;a<idnos.length;a++){
-   var curelem="element_"+idnos[a];
-    var curcomment="comment"+idnos[a];
-
-  //deduct a value from the domain if the values were yes
-  
-  if(document.getElementById(curelem).value==='Yes'){
-      
-      //i hope at this point a deduction will be done automatically because of changing the input field
-     if(document.getElementById(curelem).value==="Yes"){
-         document.getElementById(curelem).value="";
-         $("#"+curelem).change();
-         //JESUS YOU ARE MIGHTY.. THIS CODE WORKED , THATS WHY I LOVE YOU
-         //I WILL PRAISE YOUR NAME FOREVER
-                }
-   document.getElementById(curcomment).value="";
-                    //assuming the mark will be one
- //__________________________________________________________________________                   
- //__________________________________________________________________________                   
- //__________________________________________________________________________                   
- //__________________________________________________________________________                   
- //__________________________________________________________________________ 
- 
-  //staticdomaintotal('','element_'+idnos[a],'1',domain);
-  //$("#element_"+idnos[a]).html();
-  //HAPA KUNA SHIDA .. THIS PART SHOUD CHANGE
-   //__________________________________________________________________________                   
- //__________________________________________________________________________                   
- //__________________________________________________________________________                   
- //__________________________________________________________________________                   
- //__________________________________________________________________________                   
-  //staticdomaintotal('','element_'+idnos[a],'1',domain);
-  
-  }
-   
-  
-   document.getElementById(curelem).disabled =true;
-   document.getElementById(curcomment).disabled="disabled";
-   //disable required status for the inpu field
-   document.getElementById(curelem).required=false;
-       //document.getElementById(curelem).removeAttribute("required");
-                                 }
-                          }
-                          
-     if(val.value===""){
-    //enable the elements      
-       for(a=0;a<idnos.length;a++){
-   var curelem="element_"+idnos[a];
-   var curcomment="comment"+idnos[a];
-   document.getElementById(curelem).disabled =false;
-   document.getElementById(curcomment).disabled =false;
-
-    document.getElementById(curelem).required=true;
-                                   }   
-         
-                        }
-                        
-                        
-                        }
         </script>
 
   <script type="text/javascript" language="en">
@@ -1058,6 +1049,7 @@ return true;
         <script type="text/javascript">
             $("#modal_trigger").leanModal({top: 200, overlay: 0.6, closeButton: ".modal_close"});
             $("#modal_trigger1").leanModal({top: 200, overlay: 0.6, closeButton: ".modal_close"});
+            
 
             //	$(function(){
             //		// Calling Login Form
@@ -1418,16 +1410,17 @@ year=fulldates[0];
                      $('#rw').html("<div class='col-md-12'><form id='wizard-example-5' action=''><fieldset><legend id='ab'></legend><div class='row'></div></fieldset></form></div>");
                     // $("#container1").load(
                       document.getElementById("wizard-example-5").innerHTML=data; 
-                      document.getElementById("agg_percentage").innerHTML=document.getElementById("totalsum").value+"%";
+                     
+                      
                      //variables that help in preloading
-                      var alle=document.getElementById("allelements").value;
-                      var alleval=document.getElementById("allelementsvalue").value;
-                      pushelements(alle,alleval);
+                    
                       //alert(alle);
                       
                       
                        $("#wizard-example-5").stepFormWizard({
-                            height: '500px',
+                            height: 'number',
+                           startStep:'1',
+                            showNav:false,
                             theme:'sky',
                             nextBtn: $('<a class="next-btn sf-right sf-btn" href="#">NEXT</a>'),
                             prevBtn: $('<a class="prev-btn sf-left sf-btn" href="#">PREVIOUS</a>'),
@@ -1449,7 +1442,7 @@ year=fulldates[0];
                                    
                                    $.ajax({
   type: 'POST',
-  url: 'updatedata',
+  url: 'updateactionpoint',
   data:form,
   dataType: 'text',
   success: function(data) {
@@ -1503,10 +1496,12 @@ year=fulldates[0];
 
                         });
 
-                        $("#ass_date").datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd', maxDate: new Date()});
-
+                        $("#ass_date").datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd'});
+                        $(".dates").datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd'});
+                      $("#rmodal_trigger").leanModal({top: 200, overlay: 0.6, closeButton: ".submitrows"});
+                           $("#delrows_trigger").leanModal({top: 200, overlay: 0.6, closeButton: ".submitrows1"});
                         $('.loading').hide();
-                      
+                       document.getElementById("coutertotal").innerHTML="<h3><b>"+document.getElementById("counter").value+" Rows</b></h3>"; 
                        
                         
                     }         
@@ -1581,6 +1576,192 @@ console.log("dont submit");
         
     }
     
+    
+    
+    
+     function loaddes(rw){
+          
+          
+        $.ajax({
+                    url: "loaddesignation",
+                    type: 'post',
+                    dataType: 'html',
+                    success: function (data) {
+                        
+                  document.getElementById("select"+rw).innerHTML=data;  
+                        
+                    }
+                });
+      }  
+      
+    function customrows(){
+     var noofrows=document.getElementById("custrows").value;
+     createrows(noofrows);
+     document.getElementById("custrows").value="";   
+    }
+    
+    function delcustomrows(){
+     var noofrows=document.getElementById("delcustrows").value;
+     deleteRow(noofrows);
+     document.getElementById("delcustrows").value="";   
+    }
+    
+  
+  function createrows(num){
+   for( a=0;a<num;a++){  
+ var allrows=document.getElementById("counter").value;
+allrows=parseInt(allrows)+1;
+ var rws2=allrows;
+
+   document.getElementById("counter").value=rws2;
+document.getElementById("coutertotal").innerHTML="<h3><b>"+rws2+"</b> Rows</h3>";
+var tbl = document.getElementById('actionpointtable');
+var lastRow=tbl.rows.length;
+//alert(lastRow);
+var x=document.getElementById('actionpointtable').insertRow(lastRow);
+//now insert columns
+
+var y=x.insertCell(0);
+var z=x.insertCell(1);
+var v=x.insertCell(2);
+var b=x.insertCell(3);
+var c=x.insertCell(4);
+//var m=x.insertCell(4);
+
+loaddes(rws2);
+y.innerHTML="<h3>"+rws2+"</h3>";
+z.innerHTML="<div class='form-group'><Textarea rows='2' cols='30' class='form-control' name='actionid"+rws2+"' id='actionid"+rws2+"' ></TextArea></div>";
+v.innerHTML="<div class='form-group'><select name='select"+rws2+"' class='form-control' id='select"+rws2+"'></select></div>";
+b.innerHTML="<div class='form-group'><input class='form-control' type='text' id='fdate"+rws2+"' name='fdate"+rws2+"'></div>";
+c.innerHTML="<div class='form-group'><input class='form-control' type='text' id='sdate"+rws2+"' name='sdate"+rws2+"'></div>";
+   
+        $("#fdate"+rws2).datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd'});
+        $("#sdate"+rws2).datepicker({changeMonth: true, changeYear: true, yearRange: '2008:2015', dateFormat: 'yy-mm-dd'});
+                        
+        }
+   
+rfr.refresh();
+//var sfw = $("#wizard_example").stepFormWizard();
+//sfw.refresh();
+   //now call the wizard method again
+
+      
+  }
+  //===================end of Adding Rows====================
+    
+    
+    
+    
+    //delete rows
+    function deleteRow(num)
+{
+   
+    //alert(num+"___maxdel is:"+maxdeletable)
+     for( a=0;a<num;a++){
+          var currowsno=parseInt(document.getElementById("counter").value);
+    var maxdeletable=parseInt(document.getElementById("oldcounter").value);
+    if(currowsno>maxdeletable){
+   
+    var all_rows=document.getElementById("counter").value;
+ 
+     if(all_rows==="1"){
+     //dont delete   
+    }
+    else{
+    var rws2=all_rows-1;
+    if(rws2<0){
+        //dont go beyond 0
+       rws2=0 ;
+    }
+document.getElementById('actionpointtable').deleteRow(all_rows);
+document.getElementById("counter").value=rws2;
+document.getElementById("coutertotal").innerHTML="<h3><b>"+rws2+"</b> Rows</h3>";
+}
+
+}
+    }
+rfr.refresh();
+}
+    
+    
+    
+    
+    
+          function saveDesignation(){
+                var designation=document.getElementById("designation").value;
+               
+                
+                if(designation===''){
+                  showerror(designation);  
+                  noerror(designation);
+                  showalert("Designation");
+                             }
+               
+//                  else if(phone===''){
+//                      
+//                  showerror(phone);  
+//                  noerror(phone);
+//                  showalert("Phone Number");                    
+//                    
+//                                    }
+                
+//                 else if(site===''){                      
+//                  showerror(site);  
+//                  noerror(site);
+//                  showselectalert("Site");                  
+//                    
+//                                    }
+                                    else {
+                                        
+                                        
+                                  $.ajax({
+                    url: "saveDesignation?dis="+designation,
+                    type: 'post',
+                    dataType: 'html',
+                    success: function (data) {
+                        
+                        var msgs=data.trim().split("@");
+                    
+                        //get the just added option and value and append to each select 
+                        var opts=msgs[1].split("%");
+    
+$('select').append("<option value="+opts[0]+" >"+opts[1]+"</option>");
+                        
+                        //now reload the staff list
+                  document.getElementById("designation").value="";
+                    var n = noty({text:"<h3>"+msgs[0]+"</h3>",
+                        layout: 'center',
+                        type: 'Success',
+                        timeout: 2800,
+         animation: {
+        open: {height: 'toggle'}, // jQuery animate function property object
+        close: {height: 'toggle'}, // jQuery animate function property object
+        easing: 'swing', // easing
+        speed: 500 // opening & closing animation speed
+    },
+    callback: {
+   
+        afterShow: function() {
+            
+        // document.getElementById("addStaff").reset();   
+        }
+    }
+    
+        });
+                  
+                  //loadmembers();
+                    
+                
+                        
+                                          }
+                                          });       
+                                        
+                                        
+                                        
+                                    }
+                
+            }
+           
     
     
         </script>

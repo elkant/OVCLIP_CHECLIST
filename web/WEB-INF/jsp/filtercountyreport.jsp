@@ -60,7 +60,7 @@
     
                          function loadsites()
             {
-                       var cboname=document.getElementById("staffcbo").value;
+                         var cboname=document.getElementById("staffcbo").value;
                          var year=document.getElementById("year").value;
                          var period=document.getElementById("period").value;
          $.ajax({

@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -24,6 +25,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class loadactionpoint extends HttpServlet {
 
+    
+    ArrayList designationsAL = null;
+            ArrayList designationsALid = null;
      private static String allelements="";
            private static String allelementsvalues="";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -39,9 +43,7 @@ public class loadactionpoint extends HttpServlet {
             String fcbo="";
             String fperiod="";
            String datevalue="";
-           String backgroundinforid="";
-           String strengthsvalue="";
-           String constraintsvalue="";
+          
            //this will hold a string of element names and values for preloading purpose
           
             
@@ -54,81 +56,28 @@ public class loadactionpoint extends HttpServlet {
             
             
             String formedform = "";
-            String asses = "<option value=''>Select Assesment</option>";
+       
             String lip = "<option value=''>Select LIP/CBO</option>";
-            String staff = "<option value=''>Select Staff Name</option>";
-            String cbostaff = "";
-            String superviserstaff = "<option value=''>Select Staff Name</option>";
-            String otherteamstaff = "<option value=''>Select Staff Name</option>";
-            String domainvalue = "";
-            double domainval=0;
-            String domaintableid = "";
-            String totalsum="";
+            
+            
             dbConn conn = new dbConn();
+//add designations to an arraylist for creation of options while craeting a form
+             designationsAL = new ArrayList();
+             designationsALid = new ArrayList();
 
-            String backginfor="select * from backgroundinfor where site='"+fsite+"' and period='"+fperiod+"' and year='"+fyear+"' ";
-            conn.rs_6=conn.st_6.executeQuery(backginfor);
-            while(conn.rs_6.next()){
-             
-                backgroundinforid=conn.rs_6.getString("backgroundid");
-                if(conn.rs_6.getString("strengths")!=null){
-                strengthsvalue=conn.rs_6.getString("strengths");
-                }
-                 if(conn.rs_6.getString("constraints")!=null){
-                constraintsvalue=conn.rs_6.getString("constraints");
-                   }
-                
-    //total sum
-                
-    totalsum=conn.rs_6.getString("totalsum");
-               //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~assesment type 
-              datevalue=conn.rs_6.getString("ass_date");
-             String getass = "select * from asses_type";
-            conn.rs0 = conn.st0.executeQuery(getass);
+            String getdesignations = "select * from designation ";
+            conn.rs0 = conn.st0.executeQuery(getdesignations);
             while (conn.rs0.next()) {
-                if(conn.rs0.getString(1).equals(conn.rs_6.getString("ass_type"))){
-                 asses += "<option selected value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + "</option>";
-                
-                }
-                else {
-                asses += "<option value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + "</option>";
-                    }
-            }
-            
-            
-            //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~staff~~~~~~~~~~~~~~~
-             //---------cbo staff
-                cbostaff=conn.rs_6.getString("staff_present");
-            
-             String getstaff = "select * from staff";
-            conn.rs0 = conn.st0.executeQuery(getstaff);
-            while (conn.rs0.next()) {
-               
-               //------------Supervisor
-                if(conn.rs0.getString(1).equals(conn.rs_6.getString("supervisor"))){
-                superviserstaff += "<option selected value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + " " + conn.rs0.getString(3) + " (" + conn.rs0.getString(4) + ") " + "</option>";
-                }
-                else {
-                superviserstaff += "<option value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + " " + conn.rs0.getString(3) + " (" + conn.rs0.getString(4) + ") " + "</option>";
-                
-                }
-               //--------other team members---------- 
-                
-                 if(conn.rs_6.getString("other_team_members").contains(conn.rs0.getString(1))){
-                otherteamstaff += "<option selected value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + " " + conn.rs0.getString(3) + " (" + conn.rs0.getString(4) + ") " + "</option>";
-                }
-                else {
-                otherteamstaff += "<option value='" + conn.rs0.getString(1) + "'>" + conn.rs0.getString(2) + " " + conn.rs0.getString(3) + " (" + conn.rs0.getString(4) + ") " + "</option>";
-                
-                }
-                
+                designationsAL.add(conn.rs0.getString("designation"));
+                designationsALid.add(conn.rs0.getString("id"));
                 
             }
             
             
             
-            }
-           
+            
+            
+           //====================cbo
 
             String getlip = "select * from cbo";
             conn.rs0 = conn.st0.executeQuery(getlip);
@@ -144,7 +93,7 @@ public class loadactionpoint extends HttpServlet {
                 
                 
                 }
-            }
+                                   }
 
             //===================SITES================
             String sites="<option value=''>select site</option>";
@@ -167,27 +116,36 @@ public class loadactionpoint extends HttpServlet {
             
             
             
-            
+         
+
+        
+              
+              
            
+            boolean createnewpage = true;
+            String initdomain = "0";
+            String getdata = "select * from action_points where site_id='"+fsite+"' and year='"+fyear+"' and period='"+fperiod+"'";
+            conn.rs = conn.st.executeQuery(getdata);
+            int counter = 0;
+           
+            String addeddata="";
+            while(conn.rs.next()){            
+            datevalue=conn.rs.getString("ass_date");
+                   //create the entire table in this page..
+             counter++;  
+             addeddata+="<tr><td><input type='hidden' value='"+conn.rs.getString("tableid")+"' name='tableid"+counter+"'/><h3>"+counter+"</h3></td><td style='color:black;'><div class='form-group'>" +               
+             "<Textarea rows='2' cols='30' class='form-control' name='actionid"+counter+"' id='actionid"+counter+"' >" +
+             conn.rs.getString("followupid")+"</TextArea>" +
+             "</div></td><td><div class=\"form-group\"><select name='select"+counter+"' class=\"form-control \" id='select"+counter+"'>"+createoptions(conn.rs.getString("responsible_person"))+"</select></div></td><td><div class=\"form-group\"><input class=\"form-control dates\" value="+conn.rs.getString("expected_date")+"  type='text' id='fdate"+counter+"' name='fdate"+counter+"'></div></td><td> <div class=\"form-group\"><input type='text' id='sdate"+counter+"' value='"+conn.rs.getString("expected_date")+"' class=\"form-control dates\" name='sdate"+counter+"'></div></td></tr>";   
             
             
-            
-             //get the max no of elements 
-            
-            String maxelem="select MAX(questionid) from questions";
-            int no_of_elements=0;
-            conn.rs=conn.st.executeQuery(maxelem);
-            while(conn.rs.next()){
-            no_of_elements=conn.rs.getInt(1);
             
             }
-            
-
-           formedform="<fieldset><input type='hidden' value='partialdomaintotal' id='domainsumfilter' name='domainsumfilter'>"
+               formedform="<fieldset>"
                     + "<legend> Section A: Background Information </legend>"
                     + "<div class='row'>"
-                    + "<div class='col-lg-6'> <input type='hidden' name='backgroundid' value='"+backgroundinforid+"' id='backgroundid' /><input type='hidden' value='"+no_of_elements+"' name='no_of_elements' id='no_of_elements'>"
-                    + "<input type='hidden' value='"+totalsum +"' name='totalsum' id='totalsum'>"
+                    + "<div class='col-lg-6'>"
+                    + ""
                    
                    + ""
                     + "<div class='form-group'>"
@@ -213,232 +171,52 @@ public class loadactionpoint extends HttpServlet {
                     + "</div>"
                     + ""
                     + ""
-                    + "<div class=\"form-group\">\n"
-                    + "<label for=\"exampleInputPassword6\">LIP/CBO Staff Present</label>\n"
-                    + "<textarea cols='25' rows ='2' class=\"form-control\" name=\"staffpresent\" id='staffpresent' data-parsley-group=\"block0\" required>\n"
-                    + "" + cbostaff
-                    + "</textarea> "
-                    + "</div>"
-                    + ""
-                    + "</div>"
-                    + //begin column two
-                    "<div class='col-lg-6'>"
-                    + ""
-                    + "<div class=\"form-group\">\n"
-                    + "<label for=\"exampleInputPassword6\">SuperVision Team Leader</label>\n"
-                    + "<select  class=\"form-control\" name=\"teamleader\" id='teamleader' data-parsley-group=\"block0\" required>\n"
-                    + "" + superviserstaff
-                    + "</select>"
-                    + "</div>"
                    
-                   
-                    + "<div class=\"form-group\">\n"
-                    + "<label for=\"exampleInputPassword6\">Assesment Type</label>\n"
-                    + "<select class=\"form-control\" name=\"asses_type\" id='asses_type' data-parsley-group=\"block0\" required>\n"
-                    + "" + asses
-                    + "</select>\n"
-                    + "</div>"
                     + ""
-                   
-                   
-                    
-                    + ""
-                    + "<div class=\"form-group\">\n"
-                    + "<label for=\"exampleInputPassword6\">Other Team members</label>\n"
-                    + "<select multiple class=\"form-control\" name=\"teammembers\" id='teammembers' data-parsley-group=\"block0\" required>\n"
-                    + "" + otherteamstaff
-                    + "</select>"
                     + "</div>"
                     + ""
                     + "</div>"
                     + "</div>"
                     + "</fieldset>";
 
-            boolean createnewpage = true;
-            String initdomain = "0";
-//select data from the domain value
+              formedform+="<fieldset><legend style='text-align:center;'>DQA ACTION POINT</legend>"
+                    + "<div class='row' ><table ><tr><td><span><input type=\"text\" value=\"Add 1 Row\" id=\"generate1\" class ='generate1' onclick=\"createrows('1');\" readonly style=\" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 40px; width:140px;text-align:center ; color:white ;background:green; border-style:ridge ;\" /></span></td>"
+                   + "<td><span><input type=\"text\" value=\"Delete Row\" id=\"generate1\" class ='generate1' onclick=\"deleteRow('1');\" readonly style=\" cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 40px; width:170px;text-align:center ; color:white ;background:coral; border-style:ridge ;\" /></span></td>"
+                     + "<td><a id='rmodal_trigger' style='page-break-before: avoid;color:red;background-color:white;margin:0px;' href='#rowsmodal' ><input type='text' value='Add Custom No of Rows' id='generate2'   readonly style='cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 40px; width:180px;text-align:center ; color:white ;background:#00CC00; border-style:ridge ;'/></a></td>"
+                     + "<td><a id='delrows_trigger' style='page-break-before: avoid;color:red;background-color:white;margin:0px;' href='#delrowsmodal' ><input type='text' value='Delete Custom No of Rows' id='generate3'   readonly style='cursor:pointer;margin-left: 50px; text-transform:uppercase ; height: 40px; width:180px;text-align:center ; color:white ;background:#FF0000; border-style:ridge ;'/></a></td></tr></table>"
+                    
+                    + "<div style='overflow:scroll;'><table id='actionpointtable' name='actionpointtable'  style='overflow-y:scroll;width:1030px;padding-bottom:20px;margin-left:20px;margin-right:2px;margin-bottom:5px;height:97%;'  border='1'><tr><th><h4><b>SN</b></h4></th><th><h4><font color='red'><b>*</font>Follow up Actions recommended </b></h4></th><th><h4><font color='red'>*</font><b>Responsible person</b></h4></th><th><h4><font color='red'>*</font> <b>1st Expected <br/>Completion Date</b></h4></th><th><h4>2nd Expected <br/>Completion Date</h4></th></tr>";
            
-            String getdata = "select * from questions join domains on questions.domain_id=domains.domain_id order by questionid asc";
-            conn.rs = conn.st.executeQuery(getdata);
-            int count = 0;
-            String domaintable="";
-            String tableheader = "<tr><th>SN</th><th>Assesment Questions</th><th>Response</th><th>Comment</th></tr>";
-            String middletable = "";
-            String legendheader="";
-            String questionvalue=""; 
-            String questiontableid=""; 
-            String commentvalue="";
-            String allnon_applicable="";
-            while (conn.rs.next()) {
-            //create a new page
-                  String functionname="";
-                  String functionname1="";
-                    String affectedelem=conn.rs.getString("affected_question");
-                    String dependantquestion=conn.rs.getString("dependant_question");
-                    String non_applicable=conn.rs.getString("non_applicable");
-                    if(non_applicable!=null){
-                        
-                    allnon_applicable+=""+conn.rs.getString("questionid")+"_";
-                    
-                                            }
-                    
-                  String getquestval="select * from marks where  site_id='"+fsite+"' and quest_id='"+conn.rs.getString("questionid")+"' and year='"+fyear+"' and period='"+fperiod+"'";
-                  conn.rs_6=conn.st_6.executeQuery(getquestval);
-                  while(conn.rs_6.next()){
-                  questionvalue=conn.rs_6.getString("answer");
-                  questiontableid=conn.rs_6.getString("marks_id");
-                  if(conn.rs_6.getString("comment")!=null){
-                  commentvalue=conn.rs_6.getString("comment");
-                  }
-                  
-                  }
-                    
-                      // System.out.println("~~"+conn.rs.getString("affected_question"));
-                   if(affectedelem!=null){
-                     
-                    functionname="disableurl('"+affectedelem+"',this,'"+conn.rs.getString("domain_id")+"');";
-                                          }
-                   //here am assuming we cant have both elements with 
-                    if(dependantquestion!=null){
-                        
-                     dependantquestion=dependantquestion.trim();
-                     
-                    functionname1="invokedisable('element_"+dependantquestion+"');";
-                                          } 
-                if (conn.rs.getString("domain_id").equals(initdomain)) {
-                   // System.out.println(conn.rs.getString("domain_id")+"=="+initdomain);
-                    
-                    //dont create a new page/fieldset
-                    createnewpage = false;
-                    //add the form elements in here
-                    middletable += "<tr><td><b>" + conn.rs.getString("sn") + "</b></td><td style='width:500px;'> <h4 style='color:black;'> <b>" + conn.rs.getString("question") +"</b>.</h4> <font color='red'><h4 >"+conn.rs.getString("comment")+"</h4></font> </td>";
-                    String elemname = "element_" + conn.rs.getString("questionid") + "#" + conn.rs.getString("response_type");
-                    String marks=conn.rs.getString("marks");
-                    
-                    
-                    String nusutotalqr=" SELECT count(*) as total FROM questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
-                   int nusutotal=1;
-                   conn.rs_4=conn.st_4.executeQuery(nusutotalqr);
-                   
-                   while( conn.rs_4.next()){
-                   nusutotal=conn.rs_4.getInt(1);                   
-                   }
-                
-                
-                
-                    
-                    String totalperdomain=conn.rs.getString("total");
-                    float dcmlmark=(float)conn.rs.getInt("marks")/conn.rs.getInt("total");
-                     float partialdcmlmark=(float)conn.rs.getInt("marks")/nusutotal;
-                  
-                   
-                    middletable += "<td style='width:100px;'>"+elementcreator(questionvalue,questiontableid,functionname,functionname1,elemname,""+dcmlmark,""+partialdcmlmark,initdomain) + "</td>"
-                           
-                            + "<td style='width:500px;'> <textarea cols='25' rows='2'  class='form-control' name=\"comment"+conn.rs.getString("questionid") + "\" id=\"comment"+ conn.rs.getString("questionid") + "\"  >"+commentvalue+"</textarea>" 
-                        + "</td>"
-                        + "</tr>";
-
-                } else {
-                    //create a new page
-                    
-                                   
-                    createnewpage = true;
-                    if (count == 0) {
-
-                //create a new page without begining with a closing
-                                    } else {
-                //create a new page by closing what exists 
-            
-                        
-         domaintable="<fieldset> "
-         + "<legend>"+legendheader+" <span style='padding:2px;color:red;font-size:25px;' id='domain"+initdomain+"'>"+domainval+"%</span></legend><input type='hidden' name='domaininput"+initdomain+"' value='"+domainvalue+"' id='domaininput"+initdomain+"'/><input type='hidden' name='domaintableid"+initdomain+"' value='"+domaintableid+"' id='domaintableid"+initdomain+"'/>  <table border='1' style='width:1030px;margin:6px;margin-right:2px;'><tr><th colspan='4'><b>Domain: "+legendheader+"</b></th></tr>"
-               + ""+tableheader+middletable+"</table></fieldset>";
-                 formedform+=domaintable;
-                 //reset the middle table
-                 middletable="";
-                // System.out.println("Domain "+legendheader+" TABLE "+domaintable);
-                    }
-
-                }
-   //change the legend header after a table copy has been created             
-                if(conn.rs.getString("quest_no").equalsIgnoreCase("Q1")){
-                   
-                legendheader=conn.rs.getString("domain_name");
-                initdomain=conn.rs.getString("domain_id");
-  String getdomaintotals="select * from domain_totals where domainid='"+initdomain+"' and site='"+fsite+"' and period='"+fperiod+"' and year='"+fyear+"'";
-   conn.rs_6=conn.st_6.executeQuery(getdomaintotals);
-                    while(conn.rs_6.next()){
-                    
-                    domainvalue=conn.rs_6.getString("value");
-                   
-                    if(conn.rs_6.getString("value").equals("")){
-                    
-                    domainvalue="0";
-                    }
-                    
-                     domainval=Float.parseFloat(domainvalue);
-                 domainval=domainval*100;
-                 BigDecimal bd=new BigDecimal(domainval).setScale(0,RoundingMode.HALF_EVEN);
-                    //domainval=bd.doubleValue();
-                    domainval=Math.round(domainval);
-                    domaintableid=conn.rs_6.getString("tableid");
-                    }
-                
-                    
-                middletable += "<tr><td><b>" + conn.rs.getString("sn") + "</b></td><td> <h4 style='color:black;'> <b>" + conn.rs.getString("question") +"</b>.</h4> <font color='red'><h4 >"+conn.rs.getString("comment")+"</h4></font> </td>";
-                String elemname = "element_" + conn.rs.getString("questionid") + "#" + conn.rs.getString("response_type");
-                String marks=conn.rs.getString("marks");
-                
-                   String nusutotalqr=" SELECT count(*) as total FROM questions where non_applicable is null and domain_id='"+conn.rs.getString("domain_id")+"'";
-                   int nusutotal=1;
-                   conn.rs_4=conn.st_4.executeQuery(nusutotalqr);
-                   
-                   while( conn.rs_4.next()){
-                   nusutotal=conn.rs_4.getInt(1);                   
-                   }
-                
-                String totalperdomain=conn.rs.getString("total");
-                float dcmlmark=(float)conn.rs.getInt("marks")/conn.rs.getInt("total"); 
-                 float partialdcmlmark=(float)conn.rs.getInt("marks")/nusutotal;
-                  
-                
-                
-                middletable +="<td style='width:100px;'>"+elementcreator(questionvalue,questiontableid,functionname,functionname1,elemname,""+dcmlmark,""+partialdcmlmark,initdomain) + "</td>"
-                            + "<td style='width:500px;'> <textarea cols='25' rows='2'  class='form-control' name=\"comment" + conn.rs.getString("questionid") + "\" id=\"comment"+ conn.rs.getString("questionid") + "\"  >"+commentvalue+"</textarea>" 
-                            + "</td>"
-                            + "</tr>";
-                
-                
-                                                          }
-                count++;
-            }//end of while loop
-           
-              String extraqstn="<tr><td colspan='4'><h3 style='text-align:center;color:black;'>What has worked well in the areas observed</h3></td></tr>";
-             extraqstn+="<tr><td colspan='4'><textarea cols='25' rows='2'  class='form-control' name='strengths' id='strengths'  >"+strengthsvalue+"</textarea></td></tr>";
-            extraqstn+="<tr><td colspan='4'><h3 style='text-align:center;color:black;'>Critical Constraints affecting quality programming and data management</h3></td></tr>";
-            extraqstn+="<tr><td colspan='4'><textarea cols='25' rows='2'  class='form-control' name='constraints' id='constraints'  >"+constraintsvalue+"</textarea></td></tr>";
+           formedform+=addeddata;
             
             
-            domaintable="<fieldset> <legend>"+legendheader+"  <span style='color:red;font-size:25px;' id='domain"+initdomain+"'>"+domainval+"%</span> </legend>"
-                    + "<input type='hidden' value='"+domainvalue+"' name='domaininput"+initdomain+"' id='domaininput"+initdomain+"'> "
-                    + "<input type='hidden' name='domaintableid"+initdomain+"' value='"+domaintableid+"' id='domaintableid"+initdomain+"'/>"
-                    + "<input type='hidden' name='allelements' value='"+allelements+"' id='allelements'/>"
-                    + "<input type='hidden' name='allelementsvalue' value='"+allelementsvalues+"' id='allelementsvalue'/>"
-                    + "<table border='1' style='width:1030px;margin:6px;margin-right:2px;'>"
-                    + "<tr><th colspan='4'><b>Domain: "+legendheader+"</b></th></tr>"
-            + ""+tableheader+middletable+extraqstn+"</table></fieldset>";
-                 formedform+=domaintable+"<input type='hidden' name='allskippables' value='"+allnon_applicable+"' id='allskippables'>";
-                 //reset the middle table
-                 
+             formedform+="</table></div><input type='hidden' name='counter' id='counter' value='"+counter+"'><input type='hidden' name='oldcounter' id='oldcounter' value='"+counter+"'></div>";
             
-                if(conn.rs!=null){conn.rs.close();}   
-            if(conn.rs0!=null){conn.rs0.close();}   
-            if(conn.rs_4!=null){conn.rs_4.close();}   
-            if(conn.rs_6!=null){conn.rs_6.close();}   
-         if(conn.st0!=null){conn.st0.close();}  
-         if(conn.st!=null){conn.st.close();}  
-         if(conn.st_4!=null){conn.st_4.close();} 
-         if(conn.st_6!=null){conn.st_6.close();} 
+            
+              if (conn.rs != null) {
+                conn.rs.close();
+            }
+            if (conn.rs0 != null) {
+                conn.rs0.close();
+            }
+            if (conn.rs_4 != null) {
+                conn.rs_4.close();
+            }
+            if (conn.rs_6 != null) {
+                conn.rs_6.close();
+            }
+            if (conn.st0 != null) {
+                conn.st0.close();
+            }
+            if (conn.st != null) {
+                conn.st.close();
+            }
+            if (conn.st_4 != null) {
+                conn.st_4.close();
+            }
+            if (conn.st_6 != null) {
+                conn.st_6.close();
+            }
             
 
             try (PrintWriter out = response.getWriter()) {
@@ -452,89 +230,44 @@ public class loadactionpoint extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+ 
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
     //This function creates 
-    public static String elementcreator(String qvalue,String qtableid,String functionname,String functionname1,String restype,String marks,String halfmarks,String domainid) {
-
-        String createdelem = "";
-
-        //sample format element1#Select#__Yes_No i.e name#type#options
-        String elemarr[] = restype.split("#");
-        //index 0 is name
-        //index 1 is type
-        //index 2 is options => this should be split further using _ delimiter
-        //for now we are dealing with input and select elements 
-        allelements+=elemarr[0]+"~";
-        allelementsvalues+=qvalue+"~";
-        
-        if (elemarr[1].equalsIgnoreCase("input")) {
-
-            createdelem = "<div class='form-group'>"
-                    + "<input type='text' class='form-control' name='" + elemarr[0] + "'  id='" + elemarr[0] + "' >"
-                    + "</div>";
-        } //input
-        else if (elemarr[1].equalsIgnoreCase("select")) {
-
-            //create an options list 
-            String options = "";
-            String opts[] = elemarr[2].split("_");
-            for(int a = 0; a < opts.length; a++) {
-                if(opts[a].equals(qvalue)){
-                
-                options += "<option selected value='" + opts[a] + "'>" + opts[a] + "</option>";
-                }
-                else {
-                 options += "<option value='" + opts[a] + "'>" + opts[a] + "</option>";
-                
-                }
-                                                 }
-           // System.out.println(" ~~~~~~"+elemarr[0]);
-            createdelem = "<div class=\"form-group\">"
-                    + "<select onchange=\"domaintotal(this,'"+elemarr[0]+"','"+marks+"','"+domainid+"'); partialdomaintotal(this,'"+elemarr[0]+"','"+halfmarks+"','"+domainid+"'); "+functionname+"\" onmouseover=\""+functionname1+"\" class=\"form-control\" name='" + elemarr[0] + "' id='" + elemarr[0] + "'  >\n"
-                    + "" + options  //data-parsley-group=\"block"+domainid+"\"
-                    + "</select><input type='hidden' value='"+qtableid+"' name='qid"+ elemarr[0]+"' id='qid"+ elemarr[0]+"'>"
-                    + "</div>";
-
-        }//select
-        return createdelem;
+    
+    
+    
+    public String createoptions(String designationid){
+   String val="";
+   
+   for(int a=0;a<designationsAL.size();a++){
+   if(designationid.equals(designationsALid.get(a))){
+           val += "<option selected value=" + designationsALid.get(a) + ">" + designationsAL.get(a) + "</option>";
+       } else {
+           val += "<option value=" + designationsALid.get(a) + ">" + designationsAL .get(a)+ "</option>";
+       }
+   }
+   
+   
+   
+   return val;
     }
-
+  
 }

@@ -95,6 +95,71 @@ System.out.println("Now syncing_________________________");
             dbConn loccon=new dbConn();
             dbConnweb webcon=new dbConnweb();
             
+            
+            //MERGE ACTION POINT 
+            
+              String getactionpoint="select * from action_points where issynced='0'";
+            
+            loccon.rs=loccon.st.executeQuery(getactionpoint);
+            
+            while(loccon.rs.next()){
+            //now check existance in the cloud using the unique id
+                    
+        String checkactionpoint="select ass_date,timestamp from action_points where tableid = '"+loccon.rs.getString(1)+"'";        
+         
+        webcon.rs=webcon.st.executeQuery(checkactionpoint);
+        if(webcon.rs.next()){
+        //if exists, then check timestamp
+            //if equal, update
+        if(loccon.rs.getTimestamp("timestamp").equals(webcon.rs.getTimestamp("timestamp"))){
+        
+        
+        String update="update backgroundinfor set cbo='"+loccon.rs.getString("cbo")+"', site='"+loccon.rs.getString("site")+"' , staff_present='"+loccon.rs.getString("staff_present")+"' ,supervisor='"+loccon.rs.getString("supervisor")+"', ass_date='"+loccon.rs.getString("ass_date")+"', other_team_members='"+loccon.rs.getString("other_team_members")+"',timestamp='"+loccon.rs.getString("timestamp")+"', year='"+loccon.rs.getString("year")+"', period='"+loccon.rs.getString("period")+"' , ass_type='"+loccon.rs.getString("ass_type")+"', totalsum='"+loccon.rs.getString("totalsum")+"' , strengths='"+loccon.rs.getString("strengths")+"',constraints='"+loccon.rs.getString("constraints")+"', issynced='1' where backgroundid='"+loccon.rs.getString(1)+"' ";
+        
+        webcon.st1.executeUpdate(update);
+        
+        }
+        
+        
+        }
+        //if not exists, do an insert
+         else{
+        
+         // String insert="insert into backgroundinfor set cbo=?, site='"+loccon.rs.getString("site")+"' , staff_present='"+loccon.rs.getString("staff_present")+"' ,supervisor='"+loccon.rs.getString("supervisor")+"', ass_date='"+loccon.rs.getString("ass_date")+"', other_team_members='"+loccon.rs.getString("other_team_members")+"',timestamp='"+loccon.rs.getString("timestamp")+"', year='"+loccon.rs.getString("year")+"', period='"+loccon.rs.getString("period")+"' , ass_type='"+loccon.rs.getString("ass_type")+"', totalsum='"+loccon.rs.getString("totalsum")+"' , strengths='"+loccon.rs.getString("strengths")+"',constraints='"+loccon.rs.getString("constraints")+"', issynced='1' , backgroundid='"+loccon.rs.getString(1)+"' ";
+          //String insert="insert into backgroundinfor  constraints='"+loccon.rs.getString("constraints")+"', issynced='1' , backgroundid='"+loccon.rs.getString(1)+"' ";
+          
+             String bacgroundinfor="insert into backgroundinfor (backgroundid,cbo,site,staff_present,supervisor,ass_date,other_team_members,marks_table_id,year,period,ass_type,totalsum,strengths,constraints) values "
+                 + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+          webcon.pst2=webcon.conne.prepareStatement(bacgroundinfor);
+          webcon.pst2.setString(1,loccon.rs.getString(1)); 
+          webcon.pst2.setString(2,loccon.rs.getString("cbo")); 
+          webcon.pst2.setString(3,loccon.rs.getString("site")); 
+          webcon.pst2.setString(4,loccon.rs.getString("staff_present")); 
+          webcon.pst2.setString(5,loccon.rs.getString("supervisor")); 
+          webcon.pst2.setString(6,loccon.rs.getString("ass_date")); 
+          webcon.pst2.setString(7,loccon.rs.getString("other_team_members")); 
+          webcon.pst2.setString(8,loccon.rs.getString("timestamp")); 
+          webcon.pst2.setString(9,loccon.rs.getString("year")); 
+          webcon.pst2.setString(10,loccon.rs.getString("period")); 
+          webcon.pst2.setString(11,loccon.rs.getString("ass_type")); 
+          webcon.pst2.setString(12,loccon.rs.getString("totalsum")); 
+          webcon.pst2.setString(13,loccon.rs.getString("strengths")); 
+          webcon.pst2.setString(14,loccon.rs.getString("constraints")); 
+          webcon.pst2.executeUpdate(); 
+          
+      }
+            
+            
+           loccon.st2.executeUpdate("update backgroundinfor set issynced='1' where backgroundid='"+loccon.rs.getString(1)+"' ");
+             
+            
+            }//end of bcakground infor
+            
+          
+            
+            
+            
+            
             //MERGE BACKGROUND INFOR
             
             String getbacinfor="select * from backgroundinfor where issynced='0'";
@@ -149,7 +214,7 @@ System.out.println("Now syncing_________________________");
       }
             
             
-           loccon.st2.executeUpdate("update backgroundinfor set issync='1' where backgroundid='"+loccon.rs.getString(1)+"' ");
+           loccon.st2.executeUpdate("update backgroundinfor set issynced='1' where backgroundid='"+loccon.rs.getString(1)+"' ");
              
             
             }//end of bcakground infor

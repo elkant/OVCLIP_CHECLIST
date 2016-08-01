@@ -48,27 +48,27 @@ if(!('contains' in String.prototype)) {
 
                 
                 
-                   // $.ajax({
-                    //    url:'InternetThread',                         
-                  //  type:'post',  
-                   // dataType: 'html',  
-                   // success: function(data) {
+                    $.ajax({
+                        url:'InternetThread',                         
+                    type:'post',  
+                    dataType: 'html',  
+                    success: function(data) {
                      
-//                             var n = noty({text:"Data Syncing",
-//                        layout: 'top',
-//                        type: 'Success',
-//                        timeout: 7800,
-//        animation: {
-//        open: {height: 'toggle'}, // jQuery animate function property object
-//        close: {height: 'toggle'}, // jQuery animate function property object
-//        easing: 'swing', // easing
-//        speed: 500 // opening & closing animation speed
-//    }            
-//        }); 
-                    //}
+                             var n = noty({text:"Data Syncing",
+                        layout: 'top',
+                        type: 'Success',
+                        timeout: 7800,
+        animation: {
+        open: {height: 'toggle'}, // jQuery animate function property object
+        close: {height: 'toggle'}, // jQuery animate function property object
+        easing: 'swing', // easing
+        speed: 500 // opening & closing animation speed
+                   }            
+        }); 
+                    }
                         
-                     //    });
-                         
+                         });
+//                         
                          
                           function checkVersion(){
 //    CHECK Version------------------- 

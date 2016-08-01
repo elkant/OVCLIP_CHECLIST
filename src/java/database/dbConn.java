@@ -44,10 +44,6 @@ public final class dbConn {
             // Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mhc","root", "");
             
 
-
-
-
-
             //if the saved host name is less than 2 letters long, then thats not a genuine host name
 
             URL location = dbConn.class.getProtectionDomain().getCodeSource().getLocation();
